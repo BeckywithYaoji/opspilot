@@ -26,6 +26,10 @@ class TrajectoryStep(BaseModel):
     arguments: dict[str, Any]
     observation: dict[str, Any]
     transport: Literal['local', 'mcp'] = 'local'
+    repeated: bool = False
+    blocked: bool = False
+    block_reason: str | None = None
+    state_revision: int = 0
 
 
 class RunResponse(BaseModel):

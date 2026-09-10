@@ -11,7 +11,9 @@ _WRITE_LOCK = Lock()
 
 
 def save_trajectory(query: str, scenario: str, result: RunResponse, path: Path) -> None:
-    record = result.model_dump(mode='json')
+    # Keep the established JSONL shape compact; reliability metadata appears
+    # only when a step is repeated or blocked (or has a non-zero revision).
+    record = result.model_dump(mode='json', exclude_defaults=True)
     record.update(query=query, scenario=scenario, total_steps=len(result.trajectory))
     record['steps'] = record.pop('trajectory')
     line = json.dumps(record, ensure_ascii=False) + '\n'

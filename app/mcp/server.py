@@ -22,7 +22,7 @@ def create_server(scenario: str, index_path: str | Path = 'data/qdrant') -> MCPS
 
     def search_runbook(query: Annotated[str, Field(min_length=1)],
                        top_k: Annotated[int, Field(ge=1, le=20)] = 4) -> dict[str, Any]:
-        """Search the locally indexed operations runbooks for relevant guidance."""
+        """Search runbooks when policy or missing operational knowledge is needed. Reuse existing evidence instead of repeating retrieval."""
         return retriever.search(query, top_k)
     server.add_tool(search_runbook, name='search_runbook',
                     description=search_runbook.__doc__, structured_output=True)

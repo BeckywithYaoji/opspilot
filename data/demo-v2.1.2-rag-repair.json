@@ -1,0 +1,105 @@
+{
+  "task_id": "0c9771d3-39b0-471b-95a2-647b4f8eb1b3",
+  "answer": "MCP runtime failed: server, discovery or environment snapshot unavailable.",
+  "status": "FAILED",
+  "success": false,
+  "environment": {},
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "search_runbook",
+      "arguments": {
+        "query": "SSH 运维规范 服务恢复后检查项"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "MCP server unavailable"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": false
+    },
+    {
+      "step": 2,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "ssh"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "unknown service"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": false
+    },
+    {
+      "step": 3,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": false
+    },
+    {
+      "step": 4,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "host": "dev-server",
+        "service": "sshd",
+        "status": "stopped"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": false
+    },
+    {
+      "step": 5,
+      "tool": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "status": "success",
+        "message": "sshd restarted successfully"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 1,
+      "goal_satisfied_after_step": true
+    }
+  ],
+  "tickets": [],
+  "agent_status": "FAILED",
+  "environment_restored": false,
+  "resolution_status": "FAILED",
+  "handled": false
+}

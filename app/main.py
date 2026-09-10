@@ -10,6 +10,7 @@ from app.approval import ApprovalStore
 from redis.asyncio import Redis
 from app.models import RunRequest, RunResponse
 from app.trajectory import DEFAULT_PATH
+from app.observability import LocalTracer
 
 
 app = FastAPI(title='OpsPilot V1 MCP', docs_url=None, redoc_url=None, openapi_url=None)
@@ -61,9 +62,14 @@ async def approval(payload: dict, store=Depends(get_approval_store)) -> dict:
     if decision not in {'APPROVE','REJECT'}: raise HTTPException(status_code=422, detail='decision must be APPROVE or REJECT')
     item=await store.load(aid) if aid else None
     if item is None: raise HTTPException(status_code=404, detail='approval_not_found')
-    if item.status != 'PENDING': raise HTTPException(status_code=409, detail='approval_already_resolved')
+    if item.status != 'PENDING':
+        if item.trace_id: LocalTracer.append_event(item.trace_id, 'approval.replay_blocked', metadata={'approval_id':aid,'reason':'already_resolved'}, status='BLOCKED')
+        raise HTTPException(status_code=409, detail='approval_already_resolved')
     final='APPROVED' if decision=='APPROVE' else 'REJECTED'
     await store.resolve(item, final)
+    if item.trace_id:
+        LocalTracer.append_event(item.trace_id, 'approval.resolved', metadata={'approval_id':aid,'decision':final})
+        LocalTracer.append_event(item.trace_id, 'approval.resume', metadata={'approval_id':aid,'resume_success':True})
     if decision == 'REJECT':
         return {'status':'rejected','approval_id':aid,'trace_id':item.trace_id,'tool':item.tool_name,'observation':{'status':'rejected','reason':'human_rejected_action','tool':item.tool_name}}
     async def execute():
@@ -73,4 +79,6 @@ async def approval(payload: dict, store=Depends(get_approval_store)) -> dict:
             snap=await client.snapshot()
             return obs,snap
     obs,snap=await execute()
+    if item.trace_id:
+        LocalTracer.append_event(item.trace_id, 'tool.'+item.tool_name, 'TOOL', {'tool_name':item.tool_name}, status='ERROR' if obs.get('status') in {'failed','error'} else 'OK')
     return {'status':'approved','approval_id':aid,'trace_id':item.trace_id,'tool':item.tool_name,'observation':obs,'environment':snap['environment'],'environment_restored':snap['environment_restored']}

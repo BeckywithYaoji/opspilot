@@ -40,6 +40,22 @@ class LocalTracer:
     def end(self,s,status='OK',metrics=None,error=None):
         s.end_time=time.perf_counter(); s.duration_ms=max(0,(s.end_time-s.start_time)*1000); s.status=status; s.error=error; s.metrics.update(metrics or {}); return s
     def finish(self,status,summary=None):
-        self.record.status=status; self.record.summary=summary or {}; self.path.parent.mkdir(parents=True,exist_ok=True)
+        self.record.status=status; self.record.summary=summary or {}
+        if self.record.spans:
+            self.record.summary.setdefault('total_duration_ms', sum(s.duration_ms or 0 for s in self.record.spans))
+        self.path.parent.mkdir(parents=True,exist_ok=True)
         with self.path.open('a',encoding='utf-8') as f: f.write(self.record.model_dump_json()+'\n')
         return self.record
+
+    @classmethod
+    def append_event(cls, trace_id, name, span_type='APPROVAL', metadata=None, status='OK', error=None, path=None):
+        t=cls(trace_id=trace_id, path=path)
+        s=t.start(name, span_type, metadata); t.end(s, status=status, error=error)
+        target=t.path
+        records=[]
+        if target.exists():
+            records=[json.loads(x) for x in target.read_text().splitlines() if x.strip()]
+        for record in reversed(records):
+            if record.get('trace_id')==trace_id:
+                record.setdefault('spans',[]).append(s.model_dump()); target.write_text('\n'.join(json.dumps(x,ensure_ascii=False) for x in records)+'\n'); return
+        t.finish('RUNNING')

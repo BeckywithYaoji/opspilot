@@ -1,13 +1,13 @@
 [
   {
-    "trace_id": "trace-af0e3ff0-61b4-4981-adf9-594ce8ed55e6",
-    "session_id": "a8d7e206-680c-4e8a-bc4c-f69735a92d53",
+    "trace_id": "trace-2005eef4-ad16-4f7b-8ac3-550f280633fe",
+    "session_id": "19eadcab-f89c-4dac-8b10-eedf0d024d0a",
     "memory_loaded": false,
     "memory_error": null,
     "incident_memory_error": null,
     "pending_approval": null,
     "goal_satisfied_at_step": null,
-    "task_id": "34ccc77e-075e-45df-a534-c0b80fecdafc",
+    "task_id": "dffd2951-1bc5-40aa-b0e5-935ded72b225",
     "answer": "模型调用失败或响应无效，请检查 LLM 配置、网络及工具调用兼容性。",
     "status": "FAILED",
     "success": false,
@@ -57,17 +57,17 @@
     "handled": false
   },
   {
-    "trace_id": "trace-e653c5dd-f460-4e55-a751-3ba22b00bb1d",
-    "session_id": "f3a444d1-c8ba-4308-983a-7170cb2bbf4c",
+    "trace_id": "trace-2ea401b3-abee-4745-84a3-380b819027de",
+    "session_id": "aa372ddd-db98-4380-9d24-2c655a07c911",
     "memory_loaded": false,
     "memory_error": null,
     "incident_memory_error": null,
     "pending_approval": {
-      "approval_id": "7d98d392-4b1b-4730-85e9-ba58ecf05bee",
-      "task_id": "18106a21-ba44-4fe9-8173-b95e2f66274a",
-      "session_id": "f3a444d1-c8ba-4308-983a-7170cb2bbf4c",
+      "approval_id": "d58520ae-3308-4b93-9427-fb295af21737",
+      "task_id": "8a764146-a2fa-461f-ae31-fa04922653dd",
+      "session_id": "aa372ddd-db98-4380-9d24-2c655a07c911",
       "scenario": "repairable",
-      "trace_id": "trace-e653c5dd-f460-4e55-a751-3ba22b00bb1d",
+      "trace_id": "trace-2ea401b3-abee-4745-84a3-380b819027de",
       "tool_name": "restart_service",
       "arguments": {
         "host": "dev-server",
@@ -78,7 +78,7 @@
       "status": "PENDING"
     },
     "goal_satisfied_at_step": null,
-    "task_id": "18106a21-ba44-4fe9-8173-b95e2f66274a",
+    "task_id": "8a764146-a2fa-461f-ae31-fa04922653dd",
     "answer": "Waiting for human approval.",
     "status": "AWAITING_APPROVAL",
     "success": false,
@@ -153,7 +153,7 @@
         },
         "observation": {
           "status": "pending_approval",
-          "approval_id": "7d98d392-4b1b-4730-85e9-ba58ecf05bee"
+          "approval_id": "d58520ae-3308-4b93-9427-fb295af21737"
         },
         "transport": "mcp",
         "repeated": false,
@@ -166,7 +166,7 @@
         "unresolved_requirements": [],
         "permission_decision": "REQUIRE_APPROVAL",
         "risk_level": "STATE_CHANGING",
-        "approval_id": "7d98d392-4b1b-4730-85e9-ba58ecf05bee"
+        "approval_id": "d58520ae-3308-4b93-9427-fb295af21737"
       }
     ],
     "tickets": [],

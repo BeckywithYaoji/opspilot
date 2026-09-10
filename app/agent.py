@@ -148,6 +148,7 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
                 if approval_store is None:
                     return {'messages': messages, 'steps': steps, 'step_count': count, 'status': 'FAILED', 'answer': 'Approval state persistence unavailable.'}
                 await approval_store.save(pending)
+                tracer.end(tracer.start('approval.created','APPROVAL',{'approval_id':pending.approval_id,'tool_name':call['name'],'risk_level':permission.risk_level}))
                 steps.append(TrajectoryStep(step=count + 1, tool=call['name'], arguments=call['args'],
                                             observation={'status': 'pending_approval', 'approval_id': pending.approval_id},
                                             transport='mcp', blocked=True, block_reason='approval_required',
@@ -161,7 +162,10 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
                                             transport='mcp', blocked=True, block_reason=decision['block_reason'], state_revision=runtime.state_revision))
             else:
                 tool_span=tracer.start('tool.'+call['name'],'TOOL',{'tool_name':call['name'],'arguments':call['args']})
+                retrieval_span = tracer.start('retrieval.runbook' if call['name']=='search_runbook' else 'retrieval.incident_memory' if call['name']=='search_incident_memory' else '', 'RETRIEVAL', {'query':call['args'].get('query',''),'top_k':call['args'].get('top_k',None),'collection':'runbook' if call['name']=='search_runbook' else 'opspilot_incidents'}) if call['name'] in {'search_runbook','search_incident_memory'} else None
                 observation = await client.call_tool(call['name'], call['args'])
+                if retrieval_span:
+                    tracer.end(retrieval_span, status='ERROR' if observation.get('status') in {'failed','error'} else 'OK', metrics={'returned_count':len(observation.get('results',[])) if isinstance(observation.get('results'),list) else 0})
                 tracer.end(tool_span, status='ERROR' if observation.get('status') in {'failed','error'} else 'OK')
                 runtime.record_observation(call['name'], observation)
                 count += 1

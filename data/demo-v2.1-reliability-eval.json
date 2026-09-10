@@ -1,0 +1,12 @@
+{
+  "tasks": 15,
+  "total_tool_calls": 65,
+  "retrieval_calls": 9,
+  "repeated_tool_calls": 0,
+  "blocked_tool_calls": 0,
+  "post_resolution_actions": 0,
+  "average_tool_calls": 4.333333333333333,
+  "repeated_tool_rate": 0.0,
+  "post_resolution_action_rate": 0.0,
+  "task_completion_rate": 0.8666666666666667
+}

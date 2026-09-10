@@ -1,0 +1,111 @@
+{
+  "task_id": "66568d90-67b2-4d36-935e-fe2aeb1f4640",
+  "status": "COMPLETED",
+  "success": true,
+  "resolution_status": "RESOLVED",
+  "handled": true,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": true
+      },
+      "services": {
+        "sshd": "running"
+      },
+      "restart_permission": true
+    }
+  },
+  "tickets": [],
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 2,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "host": "dev-server",
+        "service": "sshd",
+        "status": "stopped"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 3,
+      "tool": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "status": "success",
+        "message": "sshd restarted successfully"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 1
+    },
+    {
+      "step": 4,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "host": "dev-server",
+        "service": "sshd",
+        "status": "running"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 1
+    },
+    {
+      "step": 5,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "open"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 1
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "task_id": "8e2b8e6c-e9a6-44d9-b78c-e4cc0e4abd87",
+  "status": "COMPLETED",
+  "success": false,
+  "resolution_status": "FAILED",
+  "handled": false,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": false
+      },
+      "services": {
+        "sshd": "stopped"
+      },
+      "restart_permission": true
+    }
+  },
+  "tickets": [],
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    }
+  ]
+}

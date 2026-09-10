@@ -1,0 +1,131 @@
+{
+  "task_id": "bf315995-8c60-46f9-ad16-f29eee77df47",
+  "status": "COMPLETED",
+  "success": false,
+  "resolution_status": "ESCALATED",
+  "handled": true,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": false
+      },
+      "services": {
+        "sshd": "stopped"
+      },
+      "restart_permission": false
+    }
+  },
+  "tickets": [
+    {
+      "ticket_id": "INC-10b4d53fe485",
+      "title": "dev-server SSH 服务停止，需人工恢复",
+      "description": "dev-server 无法通过 SSH 连接。诊断：TCP 22 端口 closed；sshd 服务处于 stopped 状态。自动修复受阻：尝试重启 sshd 返回 permission denied（权限不足）。请具备权限的运维人员重启 dev-server 上的 sshd 服务并验证 22 端口恢复监听。"
+    }
+  ],
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 2,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "ssh"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "unknown service"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 3,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "host": "dev-server",
+        "service": "sshd",
+        "status": "stopped"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 4,
+      "tool": "search_runbook",
+      "arguments": {
+        "query": "dev-server SSH 端口 22 关闭 无法连接 处理"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "MCP server unavailable"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 5,
+      "tool": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "permission denied"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 6,
+      "tool": "create_ticket",
+      "arguments": {
+        "title": "dev-server SSH 服务停止，需人工恢复",
+        "description": "dev-server 无法通过 SSH 连接。诊断：TCP 22 端口 closed；sshd 服务处于 stopped 状态。自动修复受阻：尝试重启 sshd 返回 permission denied（权限不足）。请具备权限的运维人员重启 dev-server 上的 sshd 服务并验证 22 端口恢复监听。"
+      },
+      "observation": {
+        "status": "created",
+        "ticket_id": "INC-10b4d53fe485"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    }
+  ]
+}

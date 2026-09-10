@@ -1,0 +1,160 @@
+{
+  "task_id": "68f1c218-1786-4676-8502-5bbaa9e3b91d",
+  "status": "COMPLETED",
+  "success": true,
+  "resolution_status": "RESOLVED",
+  "handled": true,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": true
+      },
+      "services": {
+        "sshd": "running"
+      },
+      "restart_permission": true
+    }
+  },
+  "tickets": [],
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "search_runbook",
+      "arguments": {
+        "query": "SSH 服务恢复后检查内容 运维规范"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "MCP server unavailable"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 2,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "ssh"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "unknown service"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 3,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "host": "dev-server",
+        "service": "sshd",
+        "status": "stopped"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 4,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 5,
+      "tool": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "status": "success",
+        "message": "sshd restarted successfully"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 1
+    },
+    {
+      "step": 6,
+      "tool": "search_runbook",
+      "arguments": {
+        "query": "SSH 服务恢复后验证检查项"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "runbook retrieval unavailable"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 1
+    },
+    {
+      "step": 7,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "host": "dev-server",
+        "service": "sshd",
+        "status": "running"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 1
+    },
+    {
+      "step": 8,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "open"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 1
+    }
+  ]
+}

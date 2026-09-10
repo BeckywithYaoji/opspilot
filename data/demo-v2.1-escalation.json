@@ -1,0 +1,147 @@
+{
+  "task_id": "0629a03c-6dfb-41b1-8907-6e5c2adb70d3",
+  "status": "COMPLETED",
+  "success": false,
+  "resolution_status": "ESCALATED",
+  "handled": true,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": false
+      },
+      "services": {
+        "sshd": "stopped"
+      },
+      "restart_permission": false
+    }
+  },
+  "tickets": [
+    {
+      "ticket_id": "INC-d12d6afb8aa9",
+      "title": "dev-server SSH 服务无法自动恢复（sshd 已停止，重启被拒）",
+      "description": "现象：dev-server 的 22 端口 closed，sshd 服务 status=stopped。\\n已尝试：对 dev-server 执行 sshd 重启，返回 \"permission denied\"，无权限自动恢复。\\n另：runbook 检索服务不可用（连续返回 MCP/retrieval unavailable），无法获取《SSH 故障处理规范》的完整流程。\\n请求：具备权限的人工介入，重启/修复 dev-server 的 sshd，并恢复 22 端口监听；同时确认 SSH 故障处理规范的检索服务状态。\\n备注：工单创建不代表服务已恢复。"
+    }
+  ],
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "search_runbook",
+      "arguments": {
+        "query": "SSH 故障处理规范 dev-server 恢复"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "MCP server unavailable"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 2,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "ssh"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "unknown service"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 3,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 4,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "host": "dev-server",
+        "service": "sshd",
+        "status": "stopped"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 5,
+      "tool": "search_runbook",
+      "arguments": {
+        "query": "SSH 故障处理规范"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "runbook retrieval unavailable"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 6,
+      "tool": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "permission denied"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    },
+    {
+      "step": 7,
+      "tool": "create_ticket",
+      "arguments": {
+        "title": "dev-server SSH 服务无法自动恢复（sshd 已停止，重启被拒）",
+        "description": "现象：dev-server 的 22 端口 closed，sshd 服务 status=stopped。\\n已尝试：对 dev-server 执行 sshd 重启，返回 \"permission denied\"，无权限自动恢复。\\n另：runbook 检索服务不可用（连续返回 MCP/retrieval unavailable），无法获取《SSH 故障处理规范》的完整流程。\\n请求：具备权限的人工介入，重启/修复 dev-server 的 sshd，并恢复 22 端口监听；同时确认 SSH 故障处理规范的检索服务状态。\\n备注：工单创建不代表服务已恢复。"
+      },
+      "observation": {
+        "status": "created",
+        "ticket_id": "INC-d12d6afb8aa9"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0
+    }
+  ]
+}

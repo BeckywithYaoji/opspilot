@@ -1,4 +1,6 @@
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 from fastapi.routing import APIRoute
@@ -38,3 +40,14 @@ def test_eval_data_has_retrieval_and_decision_cases():
     assert 10 <= len(retrieval) <= 15
     assert 10 <= len(decisions) <= 20
     assert all(case.get("query") and case.get("expected_sources") for case in retrieval)
+
+
+def test_eval_script_runs_as_a_file_from_project_root():
+    result = subprocess.run(
+        [sys.executable, "scripts/eval_retrieval.py", "--index", "/tmp/opspilot-eval-missing-index"],
+        capture_output=True, text=True,
+    )
+    assert result.returncode == 0
+    assert "Recall@1:" in result.stdout
+    assert "Recall@3:" in result.stdout
+    assert "Recall@4:" in result.stdout

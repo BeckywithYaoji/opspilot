@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 
@@ -37,6 +38,9 @@ def main() -> None:
     parser.add_argument("--index", default="data/qdrant")
     parser.add_argument("--output", help="write full evaluation JSON to this path")
     args = parser.parse_args()
+    project_root = Path(__file__).resolve().parents[1]
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
     from app.rag.retriever import RunbookRetriever
 
     cases = json.loads(Path(args.cases).read_text(encoding="utf-8"))

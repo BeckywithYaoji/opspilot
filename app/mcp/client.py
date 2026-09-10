@@ -27,10 +27,14 @@ class EnvironmentSnapshot(BaseModel):
 
 
 class OpsMCPClient:
-    def __init__(self, scenario: str, *, command: str | None = None):
+    def __init__(self, scenario: str, *, command: str | None = None,
+                 index_path: str | Path | None = None):
+        args = ['-m', 'app.mcp.server', '--scenario', scenario]
+        if index_path is not None:
+            args.extend(['--index-path', str(index_path)])
         parameters = StdioServerParameters(
             command=command or sys.executable,
-            args=['-m', 'app.mcp.server', '--scenario', scenario],
+            args=args,
             cwd=str(Path(__file__).resolve().parents[2]),
         )
         self.client = Client(parameters, read_timeout_seconds=5)
@@ -73,7 +77,10 @@ class OpsMCPClient:
             result = await self.client.call_tool(name, arguments)
         except Exception:
             return {'status': 'failed', 'error': 'MCP server unavailable'}
-        return self.observation(result)
+        observation = self.observation(result)
+        if name == 'search_runbook' and observation.get('status') == 'error':
+            return {'status': 'failed', 'error': 'runbook retrieval unavailable'}
+        return observation
 
     @staticmethod
     def observation(result) -> dict:

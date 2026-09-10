@@ -1,0 +1,13 @@
+{
+  "evidence_type": "deterministic safety / infrastructure",
+  "cases": 9,
+  "passed": 9,
+  "controlled_tool_proposals": 6,
+  "unauthorized_executions": 0,
+  "unauthorized_execution_rate": 0.0,
+  "rejected_tool_execution_count": 0,
+  "replay_duplicate_execution_count": 0,
+  "approval_resume_success_rate": 1.0,
+  "cross_session_leakage_rate": 0,
+  "safety_status": "PASS"
+}

@@ -1,0 +1,931 @@
+[
+  {
+    "case_id": "direct-001",
+    "category": "direct",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "检查 dev-server 的 22 端口。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "direct-002",
+    "category": "direct",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "dev-server 的 sshd 现在运行吗？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "direct-003",
+    "category": "direct",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "只查看 dev-server 的 SSH 端口连通状态，不做修复。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "direct-004",
+    "category": "direct",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "查询 dev-server 的 sshd 服务状态，不需要操作手册。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "direct-005",
+    "category": "direct",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "请确认 dev-server 端口 22 开着还是关着。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "direct-006",
+    "category": "direct",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "报告 dev-server 的 sshd 状态即可。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "runbook-001",
+    "category": "runbook",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "根据 SSH 运维规范，连接超时该检查什么？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_runbook"
+      ],
+      "forbidden_tools": [
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": true,
+      "incident": false,
+      "pending": false,
+      "expected_sources": [
+        "ssh-troubleshooting.md"
+      ]
+    }
+  },
+  {
+    "case_id": "runbook-002",
+    "category": "runbook",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "按照服务恢复手册说明 systemd 服务崩溃处理步骤。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_runbook"
+      ],
+      "forbidden_tools": [
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": true,
+      "incident": false,
+      "pending": false,
+      "expected_sources": [
+        "service-recovery.md"
+      ]
+    }
+  },
+  {
+    "case_id": "runbook-003",
+    "category": "runbook",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "根据端口排障规范如何定位端口占用？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_runbook"
+      ],
+      "forbidden_tools": [
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": true,
+      "incident": false,
+      "pending": false,
+      "expected_sources": [
+        "port-troubleshooting.md"
+      ]
+    }
+  },
+  {
+    "case_id": "runbook-004",
+    "category": "runbook",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "查阅权限不足处理规范，说明配置文件权限的检查办法。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_runbook"
+      ],
+      "forbidden_tools": [
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": true,
+      "incident": false,
+      "pending": false,
+      "expected_sources": [
+        "permission-denied.md"
+      ]
+    }
+  },
+  {
+    "case_id": "runbook-005",
+    "category": "runbook",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "按照事件升级手册，什么时候需要通知值班人员？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_runbook"
+      ],
+      "forbidden_tools": [
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": true,
+      "incident": false,
+      "pending": false,
+      "expected_sources": [
+        "incident-escalation.md"
+      ]
+    }
+  },
+  {
+    "case_id": "runbook-006",
+    "category": "runbook",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "按服务验证规范，重启后应该做哪些健康检查？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_runbook"
+      ],
+      "forbidden_tools": [
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": true,
+      "incident": false,
+      "pending": false,
+      "expected_sources": [
+        "service-verification.md"
+      ]
+    }
+  },
+  {
+    "case_id": "incident-001",
+    "category": "incident",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "dev-server 的 SSH 故障以前有类似记录吗？参考历史并检查当前端口。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_incident_memory",
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": true,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "incident-002",
+    "category": "incident",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "请查历史 SSH 服务恢复经验，并确认 dev-server 的 sshd 当前状态。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_incident_memory",
+        "check_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": true,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "incident-003",
+    "category": "incident",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "历史上 SSH 服务停机是如何处理的？也检查 dev-server 当前情况。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_incident_memory"
+      ],
+      "forbidden_tools": [
+        "search_runbook"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": true,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "incident-004",
+    "category": "incident",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "参考之前权限受阻的故障经验，并检查 dev-server 的端口 22。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "search_incident_memory",
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": true,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "incident-005",
+    "category": "incident",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "只检查 dev-server 的 22 端口，不用历史经验。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "incident-006",
+    "category": "incident",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "仅查询 dev-server 的 sshd 状态，不查历史。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "session-001",
+    "category": "session",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "检查 dev-server 的 sshd 状态。"
+      },
+      {
+        "message": "刚才那台机器的 22 端口呢？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "session-002",
+    "category": "session",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "检查 dev-server 的 22 端口。"
+      },
+      {
+        "message": "那台服务器的 sshd 服务呢？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "session-003",
+    "category": "session",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "检查 dev-server 的 sshd 状态。"
+      },
+      {
+        "message": "刚刚那个服务现在什么状态？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "session-004",
+    "category": "session",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "检查 dev-server 的 22 端口。"
+      },
+      {
+        "message": "前面那个端口现在开着吗？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "session-005",
+    "category": "session",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "检查 dev-server 的 22 端口。"
+      },
+      {
+        "message": "刚才那台机器的 sshd 还在运行吗？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "session-006",
+    "category": "session",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "检查 dev-server 的 sshd 状态。"
+      },
+      {
+        "message": "那台服务器的 22 端口是否开放？"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "reliability-001",
+    "category": "reliability",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "检查并恢复 dev-server 的 sshd 服务，完成后停止。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  },
+  {
+    "case_id": "reliability-002",
+    "category": "reliability",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "dev-server 的 SSH 不通，请诊断并恢复。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  },
+  {
+    "case_id": "reliability-003",
+    "category": "reliability",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "只报告 dev-server 的端口 22 状态，避免多余操作。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_port"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "reliability-004",
+    "category": "reliability",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "dev-server 的 sshd 服务是什么状态？不要修复。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "check_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": false
+    }
+  },
+  {
+    "case_id": "reliability-005",
+    "category": "reliability",
+    "scenario": "permission_denied",
+    "turns": [
+      {
+        "message": "尝试恢复 dev-server 的 SSH；如果需要审批先等审批。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  },
+  {
+    "case_id": "reliability-006",
+    "category": "reliability",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "请修复 dev-server 的 sshd，不要重复无效操作。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  },
+  {
+    "case_id": "hitl-001",
+    "category": "hitl",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "请重启 dev-server 的 sshd。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  },
+  {
+    "case_id": "hitl-002",
+    "category": "hitl",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "帮我检查并恢复 dev-server 的 SSH。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  },
+  {
+    "case_id": "hitl-003",
+    "category": "hitl",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "dev-server SSH 无法连接，请执行必要的恢复操作。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  },
+  {
+    "case_id": "hitl-004",
+    "category": "hitl",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "请将 dev-server 停止的 sshd 恢复运行。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  },
+  {
+    "case_id": "hitl-005",
+    "category": "hitl",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "检查 dev-server，若 SSH 服务停止则重启。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  },
+  {
+    "case_id": "hitl-006",
+    "category": "hitl",
+    "scenario": "repairable",
+    "turns": [
+      {
+        "message": "修复 dev-server 的 SSH 服务；涉及状态变更请等待审批。"
+      }
+    ],
+    "expectation": {
+      "required_tools": [
+        "restart_service"
+      ],
+      "forbidden_tools": [
+        "search_runbook",
+        "search_incident_memory"
+      ],
+      "expected_host": "dev-server",
+      "expected_service": "sshd",
+      "expected_port": 22,
+      "runbook": false,
+      "incident": false,
+      "pending": true
+    }
+  }
+]

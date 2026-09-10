@@ -1,0 +1,23 @@
+{
+  "git_commit": "a29dcba7bbf203165ab5f43290a078a6931a7f00",
+  "model": "deepseek-flash",
+  "temperature": "provider default (unchanged)",
+  "timestamp": "2026-09-10T16:58:36.823714+00:00",
+  "benchmark_case_count": 36,
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "redis": "configured via environment; isolated benchmark UUID sessions",
+  "evidence_type": "real_model",
+  "attempt_policy": "one attempt; resume skips recorded cases",
+  "cases_sha256": "55c61a48779453dcb4f5c11bb47060bd6add63aefb406d25d77e2ce7312c4bbf",
+  "qdrant": {
+    "runbooks": {
+      "count": 7,
+      "path": "data/qdrant"
+    },
+    "opspilot_incidents": {
+      "count": 14,
+      "path": "data/qdrant-incidents"
+    }
+  },
+  "incident_preparation": "Reused existing persisted incidents; full source_task_id payload snapshot retained; no direct trace injection."
+}

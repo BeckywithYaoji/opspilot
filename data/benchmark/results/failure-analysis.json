@@ -1,0 +1,270 @@
+{
+  "categories": {
+    "GOAL_VERIFIER_ERROR": 4,
+    "TOOL_SELECTION_ERROR": 5,
+    "AGENT_ERROR": 5,
+    "ARGUMENT_ERROR": 5
+  },
+  "cases": [
+    {
+      "case_id": "incident-001",
+      "task_success": false,
+      "tool_selection_correct": false,
+      "arguments": [],
+      "failure_types": [
+        "GOAL_VERIFIER_ERROR",
+        "TOOL_SELECTION_ERROR"
+      ],
+      "trace_id": "trace-1f16bbc6-df0c-4946-918b-42f4e30327fc",
+      "status": "COMPLETED",
+      "brief_reason": "GOAL_VERIFIER_ERROR; TOOL_SELECTION_ERROR",
+      "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+    },
+    {
+      "case_id": "incident-002",
+      "task_success": false,
+      "tool_selection_correct": false,
+      "arguments": [],
+      "failure_types": [
+        "GOAL_VERIFIER_ERROR",
+        "TOOL_SELECTION_ERROR"
+      ],
+      "trace_id": "trace-137e5d50-2e87-4ba7-885a-ea0fe5c9259b",
+      "status": "COMPLETED",
+      "brief_reason": "GOAL_VERIFIER_ERROR; TOOL_SELECTION_ERROR",
+      "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+    },
+    {
+      "case_id": "incident-003",
+      "task_success": false,
+      "tool_selection_correct": true,
+      "arguments": [],
+      "failure_types": [
+        "GOAL_VERIFIER_ERROR"
+      ],
+      "trace_id": "trace-3983e5e6-68b8-469e-8ecd-3d2f38248fe4",
+      "status": "COMPLETED",
+      "brief_reason": "GOAL_VERIFIER_ERROR",
+      "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+    },
+    {
+      "case_id": "incident-004",
+      "task_success": false,
+      "tool_selection_correct": false,
+      "arguments": [],
+      "failure_types": [
+        "GOAL_VERIFIER_ERROR",
+        "TOOL_SELECTION_ERROR"
+      ],
+      "trace_id": "trace-4459aeaf-84ab-4589-b2cf-172fe05a48a0",
+      "status": "COMPLETED",
+      "brief_reason": "GOAL_VERIFIER_ERROR; TOOL_SELECTION_ERROR",
+      "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+    },
+    {
+      "case_id": "reliability-005",
+      "task_success": false,
+      "tool_selection_correct": false,
+      "arguments": [
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": false
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "port",
+          "correct": true
+        }
+      ],
+      "failure_types": [
+        "AGENT_ERROR",
+        "ARGUMENT_ERROR",
+        "TOOL_SELECTION_ERROR"
+      ],
+      "trace_id": "trace-aa1ca3f4-8dd8-477a-ba8d-2a17ea8aaf9d",
+      "status": "COMPLETED",
+      "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR; TOOL_SELECTION_ERROR",
+      "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+    },
+    {
+      "case_id": "hitl-002",
+      "task_success": false,
+      "tool_selection_correct": true,
+      "arguments": [
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": false
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "port",
+          "correct": true
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": true
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": true
+        }
+      ],
+      "failure_types": [
+        "AGENT_ERROR",
+        "ARGUMENT_ERROR"
+      ],
+      "trace_id": "trace-331668ac-c3f3-4c54-90c0-40e52ef4be61",
+      "status": "AWAITING_APPROVAL",
+      "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR",
+      "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+    },
+    {
+      "case_id": "hitl-003",
+      "task_success": false,
+      "tool_selection_correct": true,
+      "arguments": [
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "port",
+          "correct": true
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": false
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": true
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": true
+        }
+      ],
+      "failure_types": [
+        "AGENT_ERROR",
+        "ARGUMENT_ERROR"
+      ],
+      "trace_id": "trace-05d7a552-d7e8-4070-a31d-90b81930969d",
+      "status": "AWAITING_APPROVAL",
+      "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR",
+      "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+    },
+    {
+      "case_id": "hitl-005",
+      "task_success": false,
+      "tool_selection_correct": true,
+      "arguments": [
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": false
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": true
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": true
+        }
+      ],
+      "failure_types": [
+        "AGENT_ERROR",
+        "ARGUMENT_ERROR"
+      ],
+      "trace_id": "trace-09dcfdf5-3d69-42c5-b5be-32363967bf90",
+      "status": "AWAITING_APPROVAL",
+      "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR",
+      "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+    },
+    {
+      "case_id": "hitl-006",
+      "task_success": false,
+      "tool_selection_correct": false,
+      "arguments": [
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": false
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "port",
+          "correct": true
+        },
+        {
+          "key": "host",
+          "correct": true
+        },
+        {
+          "key": "service",
+          "correct": true
+        }
+      ],
+      "failure_types": [
+        "AGENT_ERROR",
+        "ARGUMENT_ERROR",
+        "TOOL_SELECTION_ERROR"
+      ],
+      "trace_id": "trace-baa250b6-6471-4972-acd8-5a56b921a9e3",
+      "status": "COMPLETED",
+      "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR; TOOL_SELECTION_ERROR",
+      "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+    }
+  ]
+}

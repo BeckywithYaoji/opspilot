@@ -454,3 +454,9 @@ python scripts/analyze_traces.py data/traces/traces.jsonl
 新增 MCP Tool `search_incident_memory(query, top_k=3)` 只搜索历史事件，返回摘要、状态和来源任务 ID。Agent 只有在用户询问类似历史或历史经验有助于诊断时才调用；历史结果必须作为证据，仍需检查当前环境，不能由 Python 自动触发修复。检索和写入失败都作为可降级事件，保留原 Agent 结果。
 
 真实验证：Incident Write 任务生成 `dev-server`/`sshd` 的 RESOLVED 记录；全新 Session 的 `staging-server` 查询调用 `search_incident_memory` 并检索到历史来源，同时检查当前 `staging-server`，发现 unknown host 后升级；简单端口查询没有 Incident 检索。见 `data/demo-v3.1-incident-write.json`、`data/demo-v3.1-cross-session.json`、`data/demo-v3.1-selective.json`。评估脚本为 `python scripts/eval_incident_memory.py`，当前小数据集的决策准确率与 Recall@1/3 均为 1.0，无必要检索率为 0.0。
+
+## Final Benchmark (V6)
+
+A clean, single-attempt benchmark of 36 real-model cases (42 requests) using deepseek-flash. Task success: **75.00%**; tool selection: **86.11%**; argument accuracy: **94.19%**. Deterministic HTTP/MCP/Redis safety: **9/9 passed**, plus an automatic retrieval-failure probe; unauthorized execution and sequential replay duplicates: **0**. Full regression: **101 passed, 2 warnings**.
+
+All attempts and failures are retained in `data/benchmark/`. See `data/benchmark/results/final-report.md` and `failure-analysis.json`. This benchmark measures structured task evidence, not independently judged answer quality. Dispatch trace coverage is 195/195; it does not imply complete provider-call instrumentation. Token metrics are unavailable. Development demos are not benchmark samples.

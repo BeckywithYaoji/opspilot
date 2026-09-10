@@ -1,0 +1,63 @@
+{
+  "evidence_type": "deterministic model + real MCP unavailable index + automatic trace",
+  "passed": true,
+  "response": {
+    "trace_id": "trace-76403345-331f-44a8-95a1-dc098819c8f3",
+    "session_id": "fd4116ce-d215-42b1-8afd-d590b47fc93e",
+    "memory_loaded": false,
+    "memory_error": null,
+    "incident_memory_error": null,
+    "pending_approval": null,
+    "goal_satisfied_at_step": null,
+    "task_id": "826e6dd4-eed8-41cf-9cce-cdc988717961",
+    "answer": "已记录工具观察结果。",
+    "status": "COMPLETED",
+    "success": false,
+    "environment": {
+      "dev-server": {
+        "reachable": true,
+        "ports": {
+          "22": false
+        },
+        "services": {
+          "sshd": "stopped"
+        },
+        "restart_permission": true
+      }
+    },
+    "trajectory": [
+      {
+        "step": 1,
+        "tool": "search_runbook",
+        "arguments": {
+          "query": "SSH",
+          "top_k": 1
+        },
+        "observation": {
+          "status": "failed",
+          "error": "runbook retrieval unavailable"
+        },
+        "transport": "mcp",
+        "repeated": false,
+        "blocked": false,
+        "block_reason": null,
+        "state_revision": 0,
+        "goal_satisfied_after_step": false,
+        "completion_decision": "CONTINUE",
+        "completion_verifier_error": null,
+        "unresolved_requirements": [
+          "test scenario continues"
+        ],
+        "permission_decision": null,
+        "risk_level": null,
+        "approval_id": null
+      }
+    ],
+    "tickets": [],
+    "agent_status": "COMPLETED",
+    "environment_restored": false,
+    "resolution_status": "FAILED",
+    "handled": false
+  },
+  "trace_id": "trace-76403345-331f-44a8-95a1-dc098819c8f3"
+}

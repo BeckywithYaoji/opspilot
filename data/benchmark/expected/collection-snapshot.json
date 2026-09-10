@@ -1,0 +1,350 @@
+{
+  "runbooks": {
+    "path": "data/qdrant",
+    "count": 7,
+    "records": [
+      {
+        "id": "3258400835895037459",
+        "payload": {
+          "source": "service-verification.md",
+          "title": "Service Verification",
+          "section": "Service Verification",
+          "chunk_id": "2d382a4be75c0e13",
+          "content": "After recovery, check health endpoints, process status, logs, and a representative request. Record evidence and monitor for recurrence."
+        }
+      },
+      {
+        "id": "5158728831215159561",
+        "payload": {
+          "source": "service-recovery.md",
+          "title": "Service Recovery",
+          "section": "Service Recovery",
+          "chunk_id": "47977c8a35254909",
+          "content": "Check service status and recent logs. Restart the service only after confirming the failure is understood and capture the resulting status."
+        }
+      },
+      {
+        "id": "6774872856081036539",
+        "payload": {
+          "source": "port-troubleshooting.md",
+          "title": "Port Troubleshooting",
+          "section": "Port Troubleshooting",
+          "chunk_id": "5e052ef7c12574fb",
+          "content": "Test DNS, firewall rules, and listener state. Use a TCP connection test from the affected host and verify the expected process owns the port."
+        }
+      },
+      {
+        "id": "7076832857372781396",
+        "payload": {
+          "source": "ssh-troubleshooting.md",
+          "title": "SSH Troubleshooting",
+          "section": "SSH Troubleshooting",
+          "chunk_id": "6235f5fd36846b54",
+          "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors."
+        }
+      },
+      {
+        "id": "9237829749065195582",
+        "payload": {
+          "source": "permission-denied.md",
+          "title": "Permission Denied",
+          "section": "Permission Denied",
+          "chunk_id": "80335d367091203e",
+          "content": "Check file ownership, mode bits, ACLs, and the effective user. Use sudo only when authorized, then retry and record the denied resource."
+        }
+      },
+      {
+        "id": "15126092496087973821",
+        "payload": {
+          "source": "incident-escalation.md",
+          "title": "Incident Escalation",
+          "section": "Incident Escalation",
+          "chunk_id": "d1eaacfbd5067fbd",
+          "content": "Collect impact, timeline, logs, and attempted mitigations. Escalate to the service owner when customer impact persists or access is unavailable."
+        }
+      },
+      {
+        "id": "15365411238836851829",
+        "payload": {
+          "source": "ssh-troubleshooting.md",
+          "title": "SSH Troubleshooting",
+          "section": "Verify",
+          "chunk_id": "d53ce81cbeaa5475",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps."
+        }
+      }
+    ]
+  },
+  "opspilot_incidents": {
+    "path": "data/qdrant-incidents",
+    "count": 14,
+    "records": [
+      {
+        "id": "1212508601495",
+        "payload": {
+          "incident_id": "INC-MEM-011a4f24fc97",
+          "timestamp": "2026-09-10T13:05:24.841871+00:00",
+          "task_summary": "staging-server 的 SSH 现在也连不上了，之前有没有出现过类似问题？如果有的话参考一下之前的处理经验再帮我检查。",
+          "host": "staging-server",
+          "service": "sshd",
+          "port": 22,
+          "symptom": "operational issue required intervention",
+          "root_cause": null,
+          "actions": [
+            "create_ticket"
+          ],
+          "resolution_status": "ESCALATED",
+          "resolution_summary": "automatic action was blocked; incident ticket created",
+          "source_task_id": "3db4a8ac-db07-4267-9ed4-01a3b466ba4a"
+        }
+      },
+      {
+        "id": "11031038537898",
+        "payload": {
+          "incident_id": "INC-MEM-0a085d2230aa",
+          "timestamp": "2026-09-10T13:49:34.542659+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "c07069c3-3582-48b4-923c-52b72bd75366"
+        }
+      },
+      {
+        "id": "25913771184830",
+        "payload": {
+          "incident_id": "INC-MEM-1791852052be",
+          "timestamp": "2026-09-10T16:08:11.466283+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "87da9afb-9f2f-4717-b226-0748c87866d2"
+        }
+      },
+      {
+        "id": "49662877409251",
+        "payload": {
+          "incident_id": "INC-MEM-2d2b0a2a9fe3",
+          "timestamp": "2026-09-10T13:46:31.917187+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "0a7a4354-9a10-4b0e-8245-95f23b14004b"
+        }
+      },
+      {
+        "id": "75300389341036",
+        "payload": {
+          "incident_id": "INC-MEM-447c3cf5476c",
+          "timestamp": "2026-09-10T13:03:22.110841+00:00",
+          "task_summary": "帮我检查并恢复 dev-server 的 SSH。",
+          "host": "dev-server",
+          "service": "ssh",
+          "port": 22,
+          "symptom": "check_port reported closed; check_service reported stopped",
+          "root_cause": "ssh was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "7253be01-a7f5-46b7-8fd6-bffbc099d98a"
+        }
+      },
+      {
+        "id": "128349781140459",
+        "payload": {
+          "incident_id": "INC-MEM-74bbc31ca3eb",
+          "timestamp": "2026-09-10T16:43:15.318246+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "1a274287-5d55-4d1e-9512-f62da9d5e857"
+        }
+      },
+      {
+        "id": "167491035946945",
+        "payload": {
+          "incident_id": "INC-MEM-98550bb35fc1",
+          "timestamp": "2026-09-10T13:54:49.853792+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "e820bc47-9530-40b4-8827-e5d3800bfa53"
+        }
+      },
+      {
+        "id": "195908396576018",
+        "payload": {
+          "incident_id": "INC-MEM-b22d7a62ed12",
+          "timestamp": "2026-09-10T13:06:10.403033+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "8f50e738-6b29-42f9-9dac-3bf348929fce"
+        }
+      },
+      {
+        "id": "197865180421236",
+        "payload": {
+          "incident_id": "INC-MEM-b3f513cadc74",
+          "timestamp": "2026-09-10T16:57:19.712456+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "52d9a377-f563-46ad-9327-58b37aeba944"
+        }
+      },
+      {
+        "id": "224685601264753",
+        "payload": {
+          "incident_id": "INC-MEM-cc59b1731471",
+          "timestamp": "2026-09-10T13:36:10.627707+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "adad5de8-73d6-4ec9-8464-0dd43815b08f"
+        }
+      },
+      {
+        "id": "235531115617486",
+        "payload": {
+          "incident_id": "INC-MEM-d636dc7adcce",
+          "timestamp": "2026-09-10T16:05:00.775511+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "edcb9d04-9b82-4d21-97be-12c862f5bbc2"
+        }
+      },
+      {
+        "id": "238330745743807",
+        "payload": {
+          "incident_id": "INC-MEM-d8c2b37069bf",
+          "timestamp": "2026-09-10T13:42:48.260293+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "09167183-872a-4680-aace-6740f83b473e"
+        }
+      },
+      {
+        "id": "240380496151149",
+        "payload": {
+          "incident_id": "INC-MEM-da9ff215826d",
+          "timestamp": "2026-09-10T15:09:57.665659+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "9e2abbf7-6b97-4b80-a800-14fbbcdb199d"
+        }
+      },
+      {
+        "id": "250832417163620",
+        "payload": {
+          "incident_id": "INC-MEM-e421791f8964",
+          "timestamp": "2026-09-10T15:17:39.619525+00:00",
+          "task_summary": "修复 SSH",
+          "host": "dev-server",
+          "service": "sshd",
+          "port": null,
+          "symptom": "operational issue required intervention",
+          "root_cause": "sshd was unavailable",
+          "actions": [
+            "restart_service"
+          ],
+          "resolution_status": "RESOLVED",
+          "resolution_summary": "restart_service completed successfully",
+          "source_task_id": "4d721c9e-3df8-4bba-becf-e11b829c874b"
+        }
+      }
+    ]
+  }
+}

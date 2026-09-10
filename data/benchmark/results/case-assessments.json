@@ -1,0 +1,796 @@
+[
+  {
+    "case_id": "direct-001",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-bfcf6780-f639-4c78-b9ab-a55c0a8cdde3",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "direct-002",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-b4bb5341-4dd2-46ee-8dea-fb880f4aa3a6",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "direct-003",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-3dca7cd6-f025-48e6-bf1d-71e394d3c996",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "direct-004",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-085d4bcd-4449-496d-a8db-74161b5530d9",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "direct-005",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-90f05de2-d632-47f8-98a5-9c936fae21c0",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "direct-006",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-e96a7fc3-e430-4631-82e3-27587df1b2ca",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "runbook-001",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [],
+    "failure_types": [],
+    "trace_id": "trace-db0d8cce-0e08-474f-9fff-a72ebe6a817e",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "runbook-002",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [],
+    "failure_types": [],
+    "trace_id": "trace-e07f6a90-10a4-4e64-bdbb-011a18282123",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "runbook-003",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [],
+    "failure_types": [],
+    "trace_id": "trace-fdb49833-739e-4396-b1a0-2fa6f7c23ef9",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "runbook-004",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [],
+    "failure_types": [],
+    "trace_id": "trace-a3a39775-8e10-4244-9c86-8ebebe004663",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "runbook-005",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [],
+    "failure_types": [],
+    "trace_id": "trace-84d0f952-3645-418d-b2b3-6a2e2555fcee",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "runbook-006",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [],
+    "failure_types": [],
+    "trace_id": "trace-b1504050-4178-4fe6-9df5-efa9fa7c726e",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "incident-001",
+    "task_success": false,
+    "tool_selection_correct": false,
+    "arguments": [],
+    "failure_types": [
+      "GOAL_VERIFIER_ERROR",
+      "TOOL_SELECTION_ERROR"
+    ],
+    "trace_id": "trace-1f16bbc6-df0c-4946-918b-42f4e30327fc",
+    "status": "COMPLETED",
+    "brief_reason": "GOAL_VERIFIER_ERROR; TOOL_SELECTION_ERROR",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "incident-002",
+    "task_success": false,
+    "tool_selection_correct": false,
+    "arguments": [],
+    "failure_types": [
+      "GOAL_VERIFIER_ERROR",
+      "TOOL_SELECTION_ERROR"
+    ],
+    "trace_id": "trace-137e5d50-2e87-4ba7-885a-ea0fe5c9259b",
+    "status": "COMPLETED",
+    "brief_reason": "GOAL_VERIFIER_ERROR; TOOL_SELECTION_ERROR",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "incident-003",
+    "task_success": false,
+    "tool_selection_correct": true,
+    "arguments": [],
+    "failure_types": [
+      "GOAL_VERIFIER_ERROR"
+    ],
+    "trace_id": "trace-3983e5e6-68b8-469e-8ecd-3d2f38248fe4",
+    "status": "COMPLETED",
+    "brief_reason": "GOAL_VERIFIER_ERROR",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "incident-004",
+    "task_success": false,
+    "tool_selection_correct": false,
+    "arguments": [],
+    "failure_types": [
+      "GOAL_VERIFIER_ERROR",
+      "TOOL_SELECTION_ERROR"
+    ],
+    "trace_id": "trace-4459aeaf-84ab-4589-b2cf-172fe05a48a0",
+    "status": "COMPLETED",
+    "brief_reason": "GOAL_VERIFIER_ERROR; TOOL_SELECTION_ERROR",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "incident-005",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-90829bc2-5990-4879-83ad-5dae352d7caf",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "incident-006",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-048b7ba5-2777-4558-86fa-1af19951539d",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "session-001",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-de2894b4-db77-484b-bc0b-e2031e40ba0f",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "session-002",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-3453ba05-4894-4e0c-a5eb-4f1e516785eb",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "session-003",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-d48371d4-17c5-4117-a8a8-8e974d9cb9c5",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "session-004",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-da8dda9f-c762-4d94-89df-8f54a8cddfb4",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "session-005",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-b2c08811-2555-4337-ad06-5594a646621d",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "session-006",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-64b8376e-e75f-4312-bb19-9bdda7648c2e",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "reliability-001",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-70799d15-8611-4f76-b1eb-220c25089ed7",
+    "status": "AWAITING_APPROVAL",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "reliability-002",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-35711835-02f1-4676-9efb-8800ecffc6a9",
+    "status": "AWAITING_APPROVAL",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "reliability-003",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-ebcaff13-7e5e-4f83-91c0-b92278001be4",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "reliability-004",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-febb61f5-b7cb-43cf-a0fe-e66f79c81d80",
+    "status": "COMPLETED",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "reliability-005",
+    "task_success": false,
+    "tool_selection_correct": false,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": false
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      }
+    ],
+    "failure_types": [
+      "AGENT_ERROR",
+      "ARGUMENT_ERROR",
+      "TOOL_SELECTION_ERROR"
+    ],
+    "trace_id": "trace-aa1ca3f4-8dd8-477a-ba8d-2a17ea8aaf9d",
+    "status": "COMPLETED",
+    "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR; TOOL_SELECTION_ERROR",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "reliability-006",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-9b710dd2-5de6-4eda-ade0-b39099aa65cd",
+    "status": "AWAITING_APPROVAL",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "hitl-001",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-54afdce2-f557-461b-9a75-1de5d0c3a094",
+    "status": "AWAITING_APPROVAL",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "hitl-002",
+    "task_success": false,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": false
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [
+      "AGENT_ERROR",
+      "ARGUMENT_ERROR"
+    ],
+    "trace_id": "trace-331668ac-c3f3-4c54-90c0-40e52ef4be61",
+    "status": "AWAITING_APPROVAL",
+    "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "hitl-003",
+    "task_success": false,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": false
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [
+      "AGENT_ERROR",
+      "ARGUMENT_ERROR"
+    ],
+    "trace_id": "trace-05d7a552-d7e8-4070-a31d-90b81930969d",
+    "status": "AWAITING_APPROVAL",
+    "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "hitl-004",
+    "task_success": true,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [],
+    "trace_id": "trace-2c0a9f0c-aa0e-4e3b-a69d-b5e23656a261",
+    "status": "AWAITING_APPROVAL",
+    "brief_reason": "structured evidence satisfied",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "hitl-005",
+    "task_success": false,
+    "tool_selection_correct": true,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": false
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [
+      "AGENT_ERROR",
+      "ARGUMENT_ERROR"
+    ],
+    "trace_id": "trace-09dcfdf5-3d69-42c5-b5be-32363967bf90",
+    "status": "AWAITING_APPROVAL",
+    "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  },
+  {
+    "case_id": "hitl-006",
+    "task_success": false,
+    "tool_selection_correct": false,
+    "arguments": [
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": false
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "port",
+        "correct": true
+      },
+      {
+        "key": "host",
+        "correct": true
+      },
+      {
+        "key": "service",
+        "correct": true
+      }
+    ],
+    "failure_types": [
+      "AGENT_ERROR",
+      "ARGUMENT_ERROR",
+      "TOOL_SELECTION_ERROR"
+    ],
+    "trace_id": "trace-baa250b6-6471-4972-acd8-5a56b921a9e3",
+    "status": "COMPLETED",
+    "brief_reason": "AGENT_ERROR; ARGUMENT_ERROR; TOOL_SELECTION_ERROR",
+    "evaluation_scope": "structured evidence and nonempty public answer; no semantic answer judge"
+  }
+]

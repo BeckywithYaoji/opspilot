@@ -1,0 +1,738 @@
+{
+  "cases": [
+    {
+      "case": "approve",
+      "passed": true,
+      "actual_controlled_executions": 1,
+      "responses": [
+        {
+          "http": 200,
+          "body": {
+            "trace_id": "trace-47432ec6-712e-440e-be9c-77b61e51215c",
+            "session_id": "7f037eeb-b55f-448c-850e-c9005ad2925f",
+            "memory_loaded": false,
+            "memory_error": null,
+            "incident_memory_error": null,
+            "pending_approval": {
+              "approval_id": "a8c4c674-7099-422f-a7ad-4954714e2dc3",
+              "task_id": "336955da-2f24-4321-b813-cdf964877960",
+              "session_id": "7f037eeb-b55f-448c-850e-c9005ad2925f",
+              "scenario": "repairable",
+              "trace_id": "trace-47432ec6-712e-440e-be9c-77b61e51215c",
+              "tool_name": "restart_service",
+              "arguments": {
+                "host": "dev-server",
+                "service": "sshd"
+              },
+              "risk_level": "STATE_CHANGING",
+              "reason_code": "state_changing_operation",
+              "status": "PENDING"
+            },
+            "goal_satisfied_at_step": null,
+            "task_id": "336955da-2f24-4321-b813-cdf964877960",
+            "answer": "Waiting for human approval.",
+            "status": "AWAITING_APPROVAL",
+            "success": false,
+            "environment": {
+              "dev-server": {
+                "reachable": true,
+                "ports": {
+                  "22": false
+                },
+                "services": {
+                  "sshd": "stopped"
+                },
+                "restart_permission": true
+              }
+            },
+            "trajectory": [
+              {
+                "step": 1,
+                "tool": "restart_service",
+                "arguments": {
+                  "host": "dev-server",
+                  "service": "sshd"
+                },
+                "observation": {
+                  "status": "pending_approval",
+                  "approval_id": "a8c4c674-7099-422f-a7ad-4954714e2dc3"
+                },
+                "transport": "mcp",
+                "repeated": false,
+                "blocked": true,
+                "block_reason": "approval_required",
+                "state_revision": 0,
+                "goal_satisfied_after_step": false,
+                "completion_decision": null,
+                "completion_verifier_error": null,
+                "unresolved_requirements": [],
+                "permission_decision": "REQUIRE_APPROVAL",
+                "risk_level": "STATE_CHANGING",
+                "approval_id": "a8c4c674-7099-422f-a7ad-4954714e2dc3"
+              }
+            ],
+            "tickets": [],
+            "agent_status": "AWAITING_APPROVAL",
+            "environment_restored": false,
+            "resolution_status": "FAILED",
+            "handled": false
+          }
+        },
+        {
+          "http": 200,
+          "body": {
+            "status": "approved",
+            "approval_id": "a8c4c674-7099-422f-a7ad-4954714e2dc3",
+            "trace_id": "trace-47432ec6-712e-440e-be9c-77b61e51215c",
+            "tool": "restart_service",
+            "observation": {
+              "status": "success",
+              "message": "sshd restarted successfully"
+            },
+            "environment": {
+              "dev-server": {
+                "reachable": true,
+                "ports": {
+                  "22": true
+                },
+                "services": {
+                  "sshd": "running"
+                },
+                "restart_permission": true
+              }
+            },
+            "environment_restored": true
+          }
+        }
+      ],
+      "evidence_type": "deterministic model + HTTP + real MCP + Redis"
+    },
+    {
+      "case": "reject",
+      "passed": true,
+      "actual_controlled_executions": 0,
+      "responses": [
+        {
+          "http": 200,
+          "body": {
+            "trace_id": "trace-a0894183-cdc9-43a6-9179-f592df5b60ac",
+            "session_id": "3e06d498-9f2c-4249-add7-4d358362e248",
+            "memory_loaded": false,
+            "memory_error": null,
+            "incident_memory_error": null,
+            "pending_approval": {
+              "approval_id": "cf6812ce-9c4b-43f4-8fda-5a5808bb9a78",
+              "task_id": "cc10ae87-10d1-4cb4-bea7-5d5c7d0fae4c",
+              "session_id": "3e06d498-9f2c-4249-add7-4d358362e248",
+              "scenario": "repairable",
+              "trace_id": "trace-a0894183-cdc9-43a6-9179-f592df5b60ac",
+              "tool_name": "restart_service",
+              "arguments": {
+                "host": "dev-server",
+                "service": "sshd"
+              },
+              "risk_level": "STATE_CHANGING",
+              "reason_code": "state_changing_operation",
+              "status": "PENDING"
+            },
+            "goal_satisfied_at_step": null,
+            "task_id": "cc10ae87-10d1-4cb4-bea7-5d5c7d0fae4c",
+            "answer": "Waiting for human approval.",
+            "status": "AWAITING_APPROVAL",
+            "success": false,
+            "environment": {
+              "dev-server": {
+                "reachable": true,
+                "ports": {
+                  "22": false
+                },
+                "services": {
+                  "sshd": "stopped"
+                },
+                "restart_permission": true
+              }
+            },
+            "trajectory": [
+              {
+                "step": 1,
+                "tool": "restart_service",
+                "arguments": {
+                  "host": "dev-server",
+                  "service": "sshd"
+                },
+                "observation": {
+                  "status": "pending_approval",
+                  "approval_id": "cf6812ce-9c4b-43f4-8fda-5a5808bb9a78"
+                },
+                "transport": "mcp",
+                "repeated": false,
+                "blocked": true,
+                "block_reason": "approval_required",
+                "state_revision": 0,
+                "goal_satisfied_after_step": false,
+                "completion_decision": null,
+                "completion_verifier_error": null,
+                "unresolved_requirements": [],
+                "permission_decision": "REQUIRE_APPROVAL",
+                "risk_level": "STATE_CHANGING",
+                "approval_id": "cf6812ce-9c4b-43f4-8fda-5a5808bb9a78"
+              }
+            ],
+            "tickets": [],
+            "agent_status": "AWAITING_APPROVAL",
+            "environment_restored": false,
+            "resolution_status": "FAILED",
+            "handled": false
+          }
+        },
+        {
+          "http": 200,
+          "body": {
+            "status": "rejected",
+            "approval_id": "cf6812ce-9c4b-43f4-8fda-5a5808bb9a78",
+            "trace_id": "trace-a0894183-cdc9-43a6-9179-f592df5b60ac",
+            "tool": "restart_service",
+            "observation": {
+              "status": "rejected",
+              "reason": "human_rejected_action",
+              "tool": "restart_service"
+            }
+          }
+        }
+      ],
+      "evidence_type": "deterministic model + HTTP + real MCP + Redis"
+    },
+    {
+      "case": "replay",
+      "passed": true,
+      "actual_controlled_executions": 1,
+      "responses": [
+        {
+          "http": 200,
+          "body": {
+            "trace_id": "trace-7e849bd5-9823-48e0-9653-ad887c63b271",
+            "session_id": "4b2136aa-371f-4b2f-bb1f-2d2893c71551",
+            "memory_loaded": false,
+            "memory_error": null,
+            "incident_memory_error": null,
+            "pending_approval": {
+              "approval_id": "a70785aa-b03b-4db2-a91e-ba11848e6ccf",
+              "task_id": "1658678e-7dd8-4eec-9e2f-cc8530b1a06d",
+              "session_id": "4b2136aa-371f-4b2f-bb1f-2d2893c71551",
+              "scenario": "repairable",
+              "trace_id": "trace-7e849bd5-9823-48e0-9653-ad887c63b271",
+              "tool_name": "restart_service",
+              "arguments": {
+                "host": "dev-server",
+                "service": "sshd"
+              },
+              "risk_level": "STATE_CHANGING",
+              "reason_code": "state_changing_operation",
+              "status": "PENDING"
+            },
+            "goal_satisfied_at_step": null,
+            "task_id": "1658678e-7dd8-4eec-9e2f-cc8530b1a06d",
+            "answer": "Waiting for human approval.",
+            "status": "AWAITING_APPROVAL",
+            "success": false,
+            "environment": {
+              "dev-server": {
+                "reachable": true,
+                "ports": {
+                  "22": false
+                },
+                "services": {
+                  "sshd": "stopped"
+                },
+                "restart_permission": true
+              }
+            },
+            "trajectory": [
+              {
+                "step": 1,
+                "tool": "restart_service",
+                "arguments": {
+                  "host": "dev-server",
+                  "service": "sshd"
+                },
+                "observation": {
+                  "status": "pending_approval",
+                  "approval_id": "a70785aa-b03b-4db2-a91e-ba11848e6ccf"
+                },
+                "transport": "mcp",
+                "repeated": false,
+                "blocked": true,
+                "block_reason": "approval_required",
+                "state_revision": 0,
+                "goal_satisfied_after_step": false,
+                "completion_decision": null,
+                "completion_verifier_error": null,
+                "unresolved_requirements": [],
+                "permission_decision": "REQUIRE_APPROVAL",
+                "risk_level": "STATE_CHANGING",
+                "approval_id": "a70785aa-b03b-4db2-a91e-ba11848e6ccf"
+              }
+            ],
+            "tickets": [],
+            "agent_status": "AWAITING_APPROVAL",
+            "environment_restored": false,
+            "resolution_status": "FAILED",
+            "handled": false
+          }
+        },
+        {
+          "http": 200,
+          "body": {
+            "status": "approved",
+            "approval_id": "a70785aa-b03b-4db2-a91e-ba11848e6ccf",
+            "trace_id": "trace-7e849bd5-9823-48e0-9653-ad887c63b271",
+            "tool": "restart_service",
+            "observation": {
+              "status": "success",
+              "message": "sshd restarted successfully"
+            },
+            "environment": {
+              "dev-server": {
+                "reachable": true,
+                "ports": {
+                  "22": true
+                },
+                "services": {
+                  "sshd": "running"
+                },
+                "restart_permission": true
+              }
+            },
+            "environment_restored": true
+          }
+        },
+        {
+          "http": 409,
+          "body": {
+            "detail": "approval_already_resolved"
+          }
+        }
+      ],
+      "evidence_type": "deterministic model + HTTP + real MCP + Redis"
+    },
+    {
+      "case": "expired",
+      "passed": true,
+      "actual_controlled_executions": 0,
+      "responses": [
+        {
+          "http": 200,
+          "body": {
+            "trace_id": "trace-ae9dd5d0-fcbd-4ae2-a7db-b16d9edbc50a",
+            "session_id": "4a1ef5a8-d332-4df3-bc72-ca93f3cdec55",
+            "memory_loaded": false,
+            "memory_error": null,
+            "incident_memory_error": null,
+            "pending_approval": {
+              "approval_id": "72a39e9a-4513-45ef-be1f-e03afd960d16",
+              "task_id": "3598058a-fc8f-4a8e-a067-8ac41347329c",
+              "session_id": "4a1ef5a8-d332-4df3-bc72-ca93f3cdec55",
+              "scenario": "repairable",
+              "trace_id": "trace-ae9dd5d0-fcbd-4ae2-a7db-b16d9edbc50a",
+              "tool_name": "restart_service",
+              "arguments": {
+                "host": "dev-server",
+                "service": "sshd"
+              },
+              "risk_level": "STATE_CHANGING",
+              "reason_code": "state_changing_operation",
+              "status": "PENDING"
+            },
+            "goal_satisfied_at_step": null,
+            "task_id": "3598058a-fc8f-4a8e-a067-8ac41347329c",
+            "answer": "Waiting for human approval.",
+            "status": "AWAITING_APPROVAL",
+            "success": false,
+            "environment": {
+              "dev-server": {
+                "reachable": true,
+                "ports": {
+                  "22": false
+                },
+                "services": {
+                  "sshd": "stopped"
+                },
+                "restart_permission": true
+              }
+            },
+            "trajectory": [
+              {
+                "step": 1,
+                "tool": "restart_service",
+                "arguments": {
+                  "host": "dev-server",
+                  "service": "sshd"
+                },
+                "observation": {
+                  "status": "pending_approval",
+                  "approval_id": "72a39e9a-4513-45ef-be1f-e03afd960d16"
+                },
+                "transport": "mcp",
+                "repeated": false,
+                "blocked": true,
+                "block_reason": "approval_required",
+                "state_revision": 0,
+                "goal_satisfied_after_step": false,
+                "completion_decision": null,
+                "completion_verifier_error": null,
+                "unresolved_requirements": [],
+                "permission_decision": "REQUIRE_APPROVAL",
+                "risk_level": "STATE_CHANGING",
+                "approval_id": "72a39e9a-4513-45ef-be1f-e03afd960d16"
+              }
+            ],
+            "tickets": [],
+            "agent_status": "AWAITING_APPROVAL",
+            "environment_restored": false,
+            "resolution_status": "FAILED",
+            "handled": false
+          }
+        },
+        {
+          "http": 404,
+          "body": {
+            "detail": "approval_not_found"
+          }
+        }
+      ],
+      "evidence_type": "deterministic model + HTTP + real MCP + Redis"
+    },
+    {
+      "case": "unknown",
+      "passed": true,
+      "actual_controlled_executions": 0,
+      "responses": [
+        {
+          "http": 404,
+          "body": {
+            "detail": "approval_not_found"
+          }
+        }
+      ],
+      "evidence_type": "deterministic model + HTTP + real MCP + Redis"
+    },
+    {
+      "case": "runbook_guardrail",
+      "passed": true,
+      "actual_controlled_executions": 0,
+      "responses": [
+        {
+          "http": 200,
+          "body": {
+            "trace_id": "trace-aace23c9-ebd5-40f9-a56b-2d062de072c0",
+            "session_id": "cdff223e-e781-44df-90a9-91f75044dc50",
+            "memory_loaded": false,
+            "memory_error": null,
+            "incident_memory_error": null,
+            "pending_approval": {
+              "approval_id": "3a78c879-f236-4cbd-ab06-8a2b1e5b322f",
+              "task_id": "3c214204-2920-43fa-82e6-c683075463d8",
+              "session_id": "cdff223e-e781-44df-90a9-91f75044dc50",
+              "scenario": "repairable",
+              "trace_id": "trace-aace23c9-ebd5-40f9-a56b-2d062de072c0",
+              "tool_name": "restart_service",
+              "arguments": {
+                "host": "dev-server",
+                "service": "sshd"
+              },
+              "risk_level": "STATE_CHANGING",
+              "reason_code": "state_changing_operation",
+              "status": "PENDING"
+            },
+            "goal_satisfied_at_step": null,
+            "task_id": "3c214204-2920-43fa-82e6-c683075463d8",
+            "answer": "Waiting for human approval.",
+            "status": "AWAITING_APPROVAL",
+            "success": false,
+            "environment": {
+              "dev-server": {
+                "reachable": true,
+                "ports": {
+                  "22": false
+                },
+                "services": {
+                  "sshd": "stopped"
+                },
+                "restart_permission": true
+              }
+            },
+            "trajectory": [
+              {
+                "step": 1,
+                "tool": "search_runbook",
+                "arguments": {
+                  "query": "SSH recovery",
+                  "top_k": 1
+                },
+                "observation": {
+                  "status": "failed",
+                  "error": "runbook retrieval unavailable"
+                },
+                "transport": "mcp",
+                "repeated": false,
+                "blocked": false,
+                "block_reason": null,
+                "state_revision": 0,
+                "goal_satisfied_after_step": false,
+                "completion_decision": "CONTINUE",
+                "completion_verifier_error": null,
+                "unresolved_requirements": [
+                  "test scenario continues"
+                ],
+                "permission_decision": null,
+                "risk_level": null,
+                "approval_id": null
+              },
+              {
+                "step": 2,
+                "tool": "restart_service",
+                "arguments": {
+                  "host": "dev-server",
+                  "service": "sshd"
+                },
+                "observation": {
+                  "status": "pending_approval",
+                  "approval_id": "3a78c879-f236-4cbd-ab06-8a2b1e5b322f"
+                },
+                "transport": "mcp",
+                "repeated": false,
+                "blocked": true,
+                "block_reason": "approval_required",
+                "state_revision": 0,
+                "goal_satisfied_after_step": false,
+                "completion_decision": null,
+                "completion_verifier_error": null,
+                "unresolved_requirements": [],
+                "permission_decision": "REQUIRE_APPROVAL",
+                "risk_level": "STATE_CHANGING",
+                "approval_id": "3a78c879-f236-4cbd-ab06-8a2b1e5b322f"
+              }
+            ],
+            "tickets": [],
+            "agent_status": "AWAITING_APPROVAL",
+            "environment_restored": false,
+            "resolution_status": "FAILED",
+            "handled": false
+          }
+        }
+      ],
+      "evidence_type": "deterministic model + HTTP + real MCP + Redis"
+    },
+    {
+      "case": "incident_guardrail",
+      "passed": true,
+      "actual_controlled_executions": 0,
+      "responses": [
+        {
+          "http": 200,
+          "body": {
+            "trace_id": "trace-6c66413d-7f11-44be-9b24-5d4f99117358",
+            "session_id": "2439954c-acff-420d-bd86-99ee3e8835ee",
+            "memory_loaded": false,
+            "memory_error": null,
+            "incident_memory_error": null,
+            "pending_approval": {
+              "approval_id": "fc1f1336-3816-40ed-ab8e-4aced471a9e9",
+              "task_id": "b2deea52-af85-4d88-a022-249cde1f7059",
+              "session_id": "2439954c-acff-420d-bd86-99ee3e8835ee",
+              "scenario": "repairable",
+              "trace_id": "trace-6c66413d-7f11-44be-9b24-5d4f99117358",
+              "tool_name": "restart_service",
+              "arguments": {
+                "host": "dev-server",
+                "service": "sshd"
+              },
+              "risk_level": "STATE_CHANGING",
+              "reason_code": "state_changing_operation",
+              "status": "PENDING"
+            },
+            "goal_satisfied_at_step": null,
+            "task_id": "b2deea52-af85-4d88-a022-249cde1f7059",
+            "answer": "Waiting for human approval.",
+            "status": "AWAITING_APPROVAL",
+            "success": false,
+            "environment": {
+              "dev-server": {
+                "reachable": true,
+                "ports": {
+                  "22": false
+                },
+                "services": {
+                  "sshd": "stopped"
+                },
+                "restart_permission": true
+              }
+            },
+            "trajectory": [
+              {
+                "step": 1,
+                "tool": "search_incident_memory",
+                "arguments": {
+                  "query": "SSH",
+                  "top_k": 1
+                },
+                "observation": {
+                  "status": "success",
+                  "query": "SSH",
+                  "results": [
+                    {
+                      "incident_id": "INC-MEM-b3f513cadc74",
+                      "summary": "restart_service completed successfully",
+                      "resolution_status": "RESOLVED",
+                      "source_task_id": "52d9a377-f563-46ad-9327-58b37aeba944",
+                      "score": 0.6853069283762951
+                    }
+                  ]
+                },
+                "transport": "mcp",
+                "repeated": false,
+                "blocked": false,
+                "block_reason": null,
+                "state_revision": 0,
+                "goal_satisfied_after_step": false,
+                "completion_decision": "CONTINUE",
+                "completion_verifier_error": null,
+                "unresolved_requirements": [
+                  "test scenario continues"
+                ],
+                "permission_decision": null,
+                "risk_level": null,
+                "approval_id": null
+              },
+              {
+                "step": 2,
+                "tool": "restart_service",
+                "arguments": {
+                  "host": "dev-server",
+                  "service": "sshd"
+                },
+                "observation": {
+                  "status": "pending_approval",
+                  "approval_id": "fc1f1336-3816-40ed-ab8e-4aced471a9e9"
+                },
+                "transport": "mcp",
+                "repeated": false,
+                "blocked": true,
+                "block_reason": "approval_required",
+                "state_revision": 0,
+                "goal_satisfied_after_step": false,
+                "completion_decision": null,
+                "completion_verifier_error": null,
+                "unresolved_requirements": [],
+                "permission_decision": "REQUIRE_APPROVAL",
+                "risk_level": "STATE_CHANGING",
+                "approval_id": "fc1f1336-3816-40ed-ab8e-4aced471a9e9"
+              }
+            ],
+            "tickets": [],
+            "agent_status": "AWAITING_APPROVAL",
+            "environment_restored": false,
+            "resolution_status": "FAILED",
+            "handled": false
+          }
+        }
+      ],
+      "evidence_type": "deterministic model + HTTP + real MCP + Redis"
+    },
+    {
+      "case": "readonly",
+      "passed": true,
+      "actual_controlled_executions": 0,
+      "responses": [
+        {
+          "http": 200,
+          "body": {
+            "trace_id": "trace-f806059e-3ec5-4892-a59d-52f50548fd12",
+            "session_id": "e56058db-09a1-4a9e-8fdd-d87a8ffb302e",
+            "memory_loaded": false,
+            "memory_error": null,
+            "incident_memory_error": null,
+            "pending_approval": null,
+            "goal_satisfied_at_step": null,
+            "task_id": "88234ef9-de9b-44f8-85f1-93cbe830f0c7",
+            "answer": "已记录工具观察结果。",
+            "status": "COMPLETED",
+            "success": false,
+            "environment": {
+              "dev-server": {
+                "reachable": true,
+                "ports": {
+                  "22": false
+                },
+                "services": {
+                  "sshd": "stopped"
+                },
+                "restart_permission": true
+              }
+            },
+            "trajectory": [
+              {
+                "step": 1,
+                "tool": "check_port",
+                "arguments": {
+                  "host": "dev-server",
+                  "port": 22
+                },
+                "observation": {
+                  "host": "dev-server",
+                  "port": 22,
+                  "status": "closed"
+                },
+                "transport": "mcp",
+                "repeated": false,
+                "blocked": false,
+                "block_reason": null,
+                "state_revision": 0,
+                "goal_satisfied_after_step": false,
+                "completion_decision": "CONTINUE",
+                "completion_verifier_error": null,
+                "unresolved_requirements": [
+                  "test scenario continues"
+                ],
+                "permission_decision": null,
+                "risk_level": null,
+                "approval_id": null
+              }
+            ],
+            "tickets": [],
+            "agent_status": "COMPLETED",
+            "environment_restored": false,
+            "resolution_status": "FAILED",
+            "handled": false
+          }
+        }
+      ],
+      "evidence_type": "deterministic model + HTTP + real MCP + Redis"
+    },
+    {
+      "case": "session_isolation",
+      "passed": true,
+      "evidence_type": "real Redis integration"
+    }
+  ],
+  "execution_events": [
+    {
+      "case": "approve",
+      "decision": "APPROVED",
+      "tool": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      }
+    },
+    {
+      "case": "replay",
+      "decision": "APPROVED",
+      "tool": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      }
+    }
+  ]
+}

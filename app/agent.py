@@ -53,6 +53,9 @@ def run_agent(query: str, scenario: str, model: ChatModel, *, max_steps: int = 8
             if not isinstance(reply, AIMessage) or reply.invalid_tool_calls:
                 raise ValueError('invalid model response')
             if reply.tool_calls:
+                if any(not isinstance(call.get('id'), str) or not call['id'].strip()
+                       for call in reply.tool_calls):
+                    raise ValueError('tool call id must be a nonempty string')
                 # Intermediate assistant prose is neither retained nor exposed.
                 reply = AIMessage(content='', tool_calls=reply.tool_calls)
                 if state['step_count'] >= state['max_steps']:

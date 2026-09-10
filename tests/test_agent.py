@@ -109,3 +109,14 @@ def test_unknown_tool_and_invalid_arguments_are_observations(tmp_path):
     assert result.status == 'COMPLETED'
     assert [s.observation['status'] for s in result.trajectory] == ['failed', 'failed']
     assert json.loads(model.seen[-1][-1].content)['error'] == 'invalid tool arguments'
+
+
+@pytest.mark.parametrize('ident', [None, ''])
+def test_missing_tool_call_id_fails_before_mutation_and_is_logged(tmp_path, ident):
+    model = ScriptedModel([call('restart_service', {'host': 'dev-server', 'service': 'sshd'}, ident)])
+    path = tmp_path / 'runs.jsonl'
+    result = run_agent('test', 'repairable', model, trajectory_path=path)
+    assert result.status == 'FAILED'
+    assert result.trajectory == []
+    assert result.environment['dev-server']['services']['sshd'] == 'stopped'
+    assert json.loads(path.read_text())['status'] == 'FAILED'

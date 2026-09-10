@@ -60,6 +60,7 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
     runtime = ReliabilityRuntime(max_total_tool_calls=max_steps)
     goal_satisfied_at_step = None
     snapshot = {'environment': {}, 'environment_restored': False, 'tickets': []}
+    latest_snapshot = snapshot
 
     async def llm_node(state: AgentState) -> dict:
         try:
@@ -106,8 +107,11 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
                 # preserve ordinary repair loops for callers that still need a final model response.
                 verdict = None
                 if ('顺便' in query or '规范' in query or '端口' in query):
-                    snap = await client.snapshot()
-                    verdict = verify_goal(query, steps, snap['environment'])
+                    try:
+                        latest_snapshot = await client.snapshot()
+                    except Exception:
+                        latest_snapshot = snapshot
+                    verdict = verify_goal(query, steps, latest_snapshot['environment'])
                 if verdict is not None:
                     steps[-1].goal_satisfied_after_step = verdict.goal_satisfied
                 if verdict is not None and verdict.goal_satisfied and goal_satisfied_at_step is None:
@@ -129,7 +133,12 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
             graph.add_conditional_edges('llm', lambda state: 'tools' if state['status'] == 'RUNNING' else END)
             graph.add_conditional_edges('tools', lambda state: 'llm' if state['status'] == 'RUNNING' else END)
             state = await graph.compile().ainvoke(state, config={'recursion_limit': 2 * max_steps + 4})
-            snapshot = await client.snapshot()
+            try:
+                snapshot = await client.snapshot()
+            except Exception:
+                snapshot = latest_snapshot
+                if not snapshot.get('environment'):
+                    state['status'] = 'FAILED'
     except Exception:
         state['status'] = 'FAILED'
         state['answer'] = 'MCP runtime failed: server, discovery or environment snapshot unavailable.'

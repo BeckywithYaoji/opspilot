@@ -1,79 +1,173 @@
 {
-  "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
-  "session_id": "61c1c53f-d7f3-4bbb-aa91-fb3565796e27",
-  "memory_loaded": false,
-  "memory_error": null,
-  "incident_memory_error": null,
-  "pending_approval": null,
-  "goal_satisfied_at_step": null,
-  "task_id": "573f5a82-958b-47c9-984d-340dbf982e13",
-  "answer": "模型调用失败或响应无效，请检查 LLM 配置、网络及工具调用兼容性。",
-  "status": "FAILED",
-  "success": false,
-  "environment": {
-    "dev-server": {
-      "reachable": true,
-      "ports": {
-        "22": false
+  "evidence_type": "real_agent_qdrant",
+  "trace": {
+    "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
+    "task_id": "4fba33b9-5ade-44f9-aeea-ce54436eb145",
+    "session_id": "61c1c53f-d7f3-4bbb-aa91-fb3565796e27",
+    "status": "FAILED",
+    "spans": [
+      {
+        "span_id": "f4cf1cf0-7e10-4800-926b-d880a6fcef96",
+        "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
+        "parent_span_id": null,
+        "name": "memory.session.load",
+        "span_type": "MEMORY",
+        "start_time": 1261538.633100041,
+        "end_time": 1261538.6331145,
+        "duration_ms": 0.014459015801548958,
+        "status": "OK",
+        "metadata": {
+          "hit": false
+        },
+        "metrics": {
+          "message_count": 0
+        },
+        "error": null
       },
-      "services": {
-        "sshd": "stopped"
+      {
+        "span_id": "5ddac5f4-10cc-43c6-b145-142485a2d829",
+        "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
+        "parent_span_id": null,
+        "name": "agent.llm",
+        "span_type": "LLM",
+        "start_time": 1261539.903393125,
+        "end_time": 1261539.9035985,
+        "duration_ms": 0.20537502132356167,
+        "status": "OK",
+        "metadata": {
+          "purpose": "agent"
+        },
+        "metrics": {
+          "token_usage_available": false
+        },
+        "error": null
       },
-      "restart_permission": true
+      {
+        "span_id": "53921e59-c49c-45ea-a157-bc23e72c1fe7",
+        "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
+        "parent_span_id": null,
+        "name": "guardrail.permission",
+        "span_type": "GUARDRAIL",
+        "start_time": 1261539.904399375,
+        "end_time": 1261539.904412375,
+        "duration_ms": 0.01300009898841381,
+        "status": "OK",
+        "metadata": {
+          "tool_name": "search_incident_memory",
+          "risk_level": "READ_ONLY",
+          "decision": "ALLOW",
+          "reason_code": "read_only_operation"
+        },
+        "metrics": {},
+        "error": null
+      },
+      {
+        "span_id": "3496691f-9baa-4f3f-aa54-dc85e6493364",
+        "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
+        "parent_span_id": null,
+        "name": "tool.search_incident_memory",
+        "span_type": "TOOL",
+        "start_time": 1261539.904416583,
+        "end_time": 1261554.575190166,
+        "duration_ms": 14670.773582998663,
+        "status": "OK",
+        "metadata": {
+          "tool_name": "search_incident_memory",
+          "arguments": {
+            "query": "SSH",
+            "top_k": 3
+          }
+        },
+        "metrics": {},
+        "error": null
+      },
+      {
+        "span_id": "9723b219-7af6-4571-b64d-c5c2a88dbfd0",
+        "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
+        "parent_span_id": null,
+        "name": "retrieval.incident_memory",
+        "span_type": "RETRIEVAL",
+        "start_time": 1261539.9044255,
+        "end_time": 1261554.57515425,
+        "duration_ms": 14670.728750061244,
+        "status": "OK",
+        "metadata": {
+          "query": "SSH",
+          "top_k": 3,
+          "collection": "opspilot_incidents"
+        },
+        "metrics": {
+          "returned_count": 3
+        },
+        "error": null
+      },
+      {
+        "span_id": "aaecf8a2-de90-4276-9c3f-33814a0e29d3",
+        "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
+        "parent_span_id": null,
+        "name": "verifier.goal_completion",
+        "span_type": "VERIFIER",
+        "start_time": 1261554.582541291,
+        "end_time": 1261554.583316416,
+        "duration_ms": 0.7751251105219126,
+        "status": "ERROR",
+        "metadata": {
+          "purpose": "goal_completion"
+        },
+        "metrics": {
+          "goal_satisfied": false
+        },
+        "error": null
+      },
+      {
+        "span_id": "23764743-fe16-4188-809b-abf549e1cfee",
+        "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
+        "parent_span_id": null,
+        "name": "agent.llm",
+        "span_type": "LLM",
+        "start_time": 1261554.5871885,
+        "end_time": null,
+        "duration_ms": null,
+        "status": "OK",
+        "metadata": {
+          "purpose": "agent"
+        },
+        "metrics": {},
+        "error": null
+      }
+    ],
+    "summary": {
+      "resolution_status": "FAILED",
+      "tool_calls": 1,
+      "total_duration_ms": 29342.510292306542
     }
   },
-  "trajectory": [
+  "incident_results": [
     {
-      "step": 1,
-      "tool": "search_incident_memory",
-      "arguments": {
-        "query": "SSH",
-        "top_k": 3
-      },
-      "observation": {
-        "status": "success",
-        "query": "SSH",
-        "results": [
-          {
-            "incident_id": "INC-MEM-74bbc31ca3eb",
-            "summary": "restart_service completed successfully",
-            "resolution_status": "RESOLVED",
-            "source_task_id": "1a274287-5d55-4d1e-9512-f62da9d5e857",
-            "score": 0.6853069283762951
-          },
-          {
-            "incident_id": "INC-MEM-1791852052be",
-            "summary": "restart_service completed successfully",
-            "resolution_status": "RESOLVED",
-            "source_task_id": "87da9afb-9f2f-4717-b226-0748c87866d2",
-            "score": 0.6853069283762951
-          },
-          {
-            "incident_id": "INC-MEM-d636dc7adcce",
-            "summary": "restart_service completed successfully",
-            "resolution_status": "RESOLVED",
-            "source_task_id": "edcb9d04-9b82-4d21-97be-12c862f5bbc2",
-            "score": 0.6853069283762951
-          }
-        ]
-      },
-      "transport": "mcp",
-      "repeated": false,
-      "blocked": false,
-      "block_reason": null,
-      "state_revision": 0,
-      "goal_satisfied_after_step": false,
-      "completion_decision": null,
-      "completion_verifier_error": "completion_verifier_unavailable_or_invalid",
-      "unresolved_requirements": [],
-      "permission_decision": null,
-      "risk_level": null,
-      "approval_id": null
+      "incident_id": "INC-MEM-74bbc31ca3eb",
+      "summary": "restart_service completed successfully",
+      "resolution_status": "RESOLVED",
+      "source_task_id": "1a274287-5d55-4d1e-9512-f62da9d5e857",
+      "score": 0.685306928376295
+    },
+    {
+      "incident_id": "INC-MEM-1791852052be",
+      "summary": "restart_service completed successfully",
+      "resolution_status": "RESOLVED",
+      "source_task_id": "87da9afb-9f2f-4717-b226-0748c87866d2",
+      "score": 0.685306928376295
+    },
+    {
+      "incident_id": "INC-MEM-d636dc7adcce",
+      "summary": "restart_service completed successfully",
+      "resolution_status": "RESOLVED",
+      "source_task_id": "edcb9d04-9b82-4d21-97be-12c862f5bbc2",
+      "score": 0.685306928376295
     }
   ],
-  "tickets": [],
-  "agent_status": "FAILED",
-  "environment_restored": false,
-  "resolution_status": "FAILED",
-  "handled": false
+  "source_task_ids": [
+    "1a274287-5d55-4d1e-9512-f62da9d5e857",
+    "87da9afb-9f2f-4717-b226-0748c87866d2",
+    "edcb9d04-9b82-4d21-97be-12c862f5bbc2"
+  ]
 }

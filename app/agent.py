@@ -165,7 +165,9 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
                 retrieval_span = tracer.start('retrieval.runbook' if call['name']=='search_runbook' else 'retrieval.incident_memory' if call['name']=='search_incident_memory' else '', 'RETRIEVAL', {'query':call['args'].get('query',''),'top_k':call['args'].get('top_k',None),'collection':'runbook' if call['name']=='search_runbook' else 'opspilot_incidents'}) if call['name'] in {'search_runbook','search_incident_memory'} else None
                 observation = await client.call_tool(call['name'], call['args'])
                 if retrieval_span:
-                    tracer.end(retrieval_span, status='ERROR' if observation.get('status') in {'failed','error'} else 'OK', metrics={'returned_count':len(observation.get('results',[])) if isinstance(observation.get('results'),list) else 0})
+                    failed_retrieval = observation.get('status') in {'failed','error'}
+                    if failed_retrieval: retrieval_span.metadata['error_type']='retrieval_error'
+                    tracer.end(retrieval_span, status='ERROR' if failed_retrieval else 'OK', error=observation.get('error') if failed_retrieval else None, metrics={'returned_count':len(observation.get('results',[])) if isinstance(observation.get('results'),list) else 0})
                 tracer.end(tool_span, status='ERROR' if observation.get('status') in {'failed','error'} else 'OK')
                 runtime.record_observation(call['name'], observation)
                 count += 1

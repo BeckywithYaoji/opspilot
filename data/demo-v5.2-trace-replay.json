@@ -1,0 +1,32 @@
+{
+  "initial_trace_id": "trace-277e92e1-0921-453f-91a6-cb5c361c1f00",
+  "approval_id": "cf0735d0-6eb5-432f-82c6-07fb147aaa13",
+  "first": {
+    "status": "approved",
+    "approval_id": "cf0735d0-6eb5-432f-82c6-07fb147aaa13",
+    "trace_id": "trace-277e92e1-0921-453f-91a6-cb5c361c1f00",
+    "tool": "restart_service",
+    "observation": {
+      "status": "success",
+      "tool": "restart_service"
+    },
+    "environment": {
+      "dev-server": {
+        "reachable": true,
+        "ports": {
+          "22": true
+        },
+        "services": {
+          "sshd": "running"
+        },
+        "restart_permission": true
+      }
+    },
+    "environment_restored": true
+  },
+  "second": null,
+  "execution_names": [
+    "restart_service"
+  ],
+  "trace_id": "trace-277e92e1-0921-453f-91a6-cb5c361c1f00"
+}

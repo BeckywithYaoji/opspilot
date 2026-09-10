@@ -18,4 +18,18 @@ out.update({'Runbook Retrieval Calls':sum(sum(s['name']=='retrieval.runbook' for
  'Tool Error Rate':sum(sum(s['span_type']=='TOOL' and s['status']=='ERROR' for s in r['spans']) for r in rows)/max(1,sum(sum(s['span_type']=='TOOL' for s in r['spans']) for r in rows)),
  'Retrieval Error Rate':sum(sum(s['span_type']=='RETRIEVAL' and s['status']=='ERROR' for s in r['spans']) for r in rows)/max(1,sum(sum(s['span_type']=='RETRIEVAL' for s in r['spans']) for r in rows)),
  'Trace Error Rate':sum(any(s['status']=='ERROR' for s in r['spans']) for r in rows)/len(rows) if rows else 0})
+expected={
+ 'simple': {'agent.llm','tool.check_port','verifier.goal_completion'},
+ 'runbook': {'agent.llm','tool.search_runbook','retrieval.runbook','verifier.goal_completion'},
+ 'incident': {'agent.llm','tool.search_incident_memory','retrieval.incident_memory'},
+ 'hitl_approve': {'agent.llm','guardrail.permission','approval.created','approval.resolved','approval.resume','tool.restart_service'},
+ 'hitl_reject': {'guardrail.permission','approval.created','approval.resolved','approval.resume'},
+ 'failure': {'retrieval.incident_memory'},
+}
+cover=[]
+for r in rows:
+    scenario=r.get('summary',{}).get('scenario') or r.get('scenario')
+    if scenario in expected:
+        names={s['name'] for s in r['spans']}; cover.append(len(names & expected[scenario])/len(expected[scenario]))
+out['Trace Coverage']=sum(cover)/len(cover) if cover else 0.0
 print(json.dumps(out,indent=2))

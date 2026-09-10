@@ -1,0 +1,18 @@
+{
+  "initial_trace_id": "trace-96b5b760-9750-4e30-9c05-fab5700cb5a8",
+  "approval_id": "dc11b86d-4671-46a9-b624-1b41c172bde1",
+  "first": {
+    "status": "rejected",
+    "approval_id": "dc11b86d-4671-46a9-b624-1b41c172bde1",
+    "trace_id": "trace-96b5b760-9750-4e30-9c05-fab5700cb5a8",
+    "tool": "restart_service",
+    "observation": {
+      "status": "rejected",
+      "reason": "human_rejected_action",
+      "tool": "restart_service"
+    }
+  },
+  "second": null,
+  "execution_names": [],
+  "trace_id": "trace-96b5b760-9750-4e30-9c05-fab5700cb5a8"
+}

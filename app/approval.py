@@ -8,6 +8,7 @@ class PendingApproval(BaseModel):
     task_id: str
     session_id: str | None = None
     scenario: str = 'repairable'
+    trace_id: str | None = None
     tool_name: str
     arguments: dict
     risk_level: str

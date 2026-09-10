@@ -65,7 +65,7 @@ async def approval(payload: dict, store=Depends(get_approval_store)) -> dict:
     final='APPROVED' if decision=='APPROVE' else 'REJECTED'
     await store.resolve(item, final)
     if decision == 'REJECT':
-        return {'status':'rejected','approval_id':aid,'tool':item.tool_name,'observation':{'status':'rejected','reason':'human_rejected_action','tool':item.tool_name}}
+        return {'status':'rejected','approval_id':aid,'trace_id':item.trace_id,'tool':item.tool_name,'observation':{'status':'rejected','reason':'human_rejected_action','tool':item.tool_name}}
     async def execute():
         from app.mcp.client import OpsMCPClient
         async with OpsMCPClient(item.scenario) as client:
@@ -73,4 +73,4 @@ async def approval(payload: dict, store=Depends(get_approval_store)) -> dict:
             snap=await client.snapshot()
             return obs,snap
     obs,snap=await execute()
-    return {'status':'approved','approval_id':aid,'tool':item.tool_name,'observation':obs,'environment':snap['environment'],'environment_restored':snap['environment_restored']}
+    return {'status':'approved','approval_id':aid,'trace_id':item.trace_id,'tool':item.tool_name,'observation':obs,'environment':snap['environment'],'environment_restored':snap['environment_restored']}

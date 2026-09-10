@@ -1,0 +1,57 @@
+{
+  "trace_id": "trace-af0e3ff0-61b4-4981-adf9-594ce8ed55e6",
+  "session_id": "a8d7e206-680c-4e8a-bc4c-f69735a92d53",
+  "memory_loaded": false,
+  "memory_error": null,
+  "incident_memory_error": null,
+  "pending_approval": null,
+  "goal_satisfied_at_step": null,
+  "task_id": "34ccc77e-075e-45df-a534-c0b80fecdafc",
+  "answer": "模型调用失败或响应无效，请检查 LLM 配置、网络及工具调用兼容性。",
+  "status": "FAILED",
+  "success": false,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": false
+      },
+      "services": {
+        "sshd": "stopped"
+      },
+      "restart_permission": true
+    }
+  },
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": false,
+      "completion_decision": null,
+      "completion_verifier_error": "completion_verifier_unavailable_or_invalid",
+      "unresolved_requirements": [],
+      "permission_decision": null,
+      "risk_level": null,
+      "approval_id": null
+    }
+  ],
+  "tickets": [],
+  "agent_status": "FAILED",
+  "environment_restored": false,
+  "resolution_status": "FAILED",
+  "handled": false
+}

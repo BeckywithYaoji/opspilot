@@ -41,6 +41,7 @@ class TrajectoryStep(BaseModel):
 
 
 class RunResponse(BaseModel):
+    trace_id: str | None = None
     session_id: str | None = None
     memory_loaded: bool = False
     memory_error: str | None = None

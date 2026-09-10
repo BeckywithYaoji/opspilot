@@ -16,6 +16,7 @@ from app.reliability import ReliabilityRuntime
 from app.completion import verify_goal, completion_context
 from app.guardrails.permissions import decide_permission
 from app.approval import PendingApproval
+from app.observability import LocalTracer
 
 
 SYSTEM_PROMPT = """你是 IT Operations Agent，处理模拟服务器的运维任务。
@@ -61,15 +62,18 @@ async def _run_with_memory(query, scenario, model, max_steps, trajectory_path, s
     error = None
     loaded = False
     sid = session_id or str(uuid4())
+    tracer = LocalTracer(session_id=sid)
+    mem_span=tracer.start('memory.session.load','MEMORY',{'hit':False})
     if memory_store is not None:
         try:
             memory = await memory_store.load(sid)
             loaded = bool(memory.messages or memory.entities)
         except Exception:
             error = 'memory_load_failed'
+    tracer.end(mem_span, status='ERROR' if error else 'OK', metrics={'message_count':len(memory.messages)})
     context = render_context(memory)
     try:
-        result = await _run_agent(query, scenario, model, max_steps, trajectory_path, context, sid, approval_store)
+        result = await _run_agent(query, scenario, model, max_steps, trajectory_path, context, sid, approval_store, tracer)
         result.session_id = sid
         result.memory_loaded = loaded
         if memory_store is not None and error is None:
@@ -78,6 +82,8 @@ async def _run_with_memory(query, scenario, model, max_steps, trajectory_path, s
             except Exception:
                 error = 'memory_save_failed'
         result.memory_error = error
+        result.trace_id = tracer.record.trace_id
+        tracer.finish(result.status, {'resolution_status':result.resolution_status, 'tool_calls':len(result.trajectory)})
         save_trajectory(query, scenario, result, trajectory_path)
         return result
     finally:
@@ -88,7 +94,8 @@ async def _run_with_memory(query, scenario, model, max_steps, trajectory_path, s
                 pass
 
 
-async def _run_agent(query, scenario, model, max_steps, trajectory_path, session_context='', session_id=None, approval_store=None) -> RunResponse:
+async def _run_agent(query, scenario, model, max_steps, trajectory_path, session_context='', session_id=None, approval_store=None, tracer=None) -> RunResponse:
+    tracer = tracer or LocalTracer(session_id=session_id)
     state = {
         'messages': [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=session_context), HumanMessage(content=query)],
         'task_id': str(uuid4()), 'step_count': 0, 'max_steps': max_steps,
@@ -102,7 +109,9 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
 
     async def llm_node(state: AgentState) -> dict:
         try:
+            span=tracer.start('agent.llm','LLM',{'purpose':'agent'})
             reply = await asyncio.to_thread(model.invoke, state['messages'], tools)
+            tracer.end(span, metrics={'token_usage_available':False})
             if not isinstance(reply, AIMessage) or reply.invalid_tool_calls:
                 raise ValueError('invalid model response')
             if reply.tool_calls:
@@ -132,8 +141,10 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
                         'status': 'MAX_STEPS_EXCEEDED', 'answer': '已达到工具调用上限，任务尚未完成。'}
             decision = runtime.admit(call['name'], call['args'])
             permission = decide_permission(call['name'], call['args'])
+            guard=tracer.start('guardrail.permission','GUARDRAIL',{'tool_name':call['name'],'risk_level':permission.risk_level,'decision':permission.decision,'reason_code':permission.reason_code})
+            tracer.end(guard)
             if permission.decision == 'REQUIRE_APPROVAL' and approval_store is not None:
-                pending = PendingApproval(task_id=state['task_id'], session_id=session_id, scenario=scenario, tool_name=call['name'], arguments=call['args'], risk_level=permission.risk_level, reason_code=permission.reason_code)
+                pending = PendingApproval(task_id=state['task_id'], session_id=session_id, scenario=scenario, trace_id=tracer.record.trace_id, tool_name=call['name'], arguments=call['args'], risk_level=permission.risk_level, reason_code=permission.reason_code)
                 if approval_store is None:
                     return {'messages': messages, 'steps': steps, 'step_count': count, 'status': 'FAILED', 'answer': 'Approval state persistence unavailable.'}
                 await approval_store.save(pending)
@@ -149,7 +160,9 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
                 steps.append(TrajectoryStep(step=count, tool=call['name'], arguments=call['args'], observation=observation,
                                             transport='mcp', blocked=True, block_reason=decision['block_reason'], state_revision=runtime.state_revision))
             else:
+                tool_span=tracer.start('tool.'+call['name'],'TOOL',{'tool_name':call['name'],'arguments':call['args']})
                 observation = await client.call_tool(call['name'], call['args'])
+                tracer.end(tool_span, status='ERROR' if observation.get('status') in {'failed','error'} else 'OK')
                 runtime.record_observation(call['name'], observation)
                 count += 1
                 steps.append(TrajectoryStep(step=count, tool=call['name'], arguments=call['args'], observation=observation,
@@ -160,7 +173,9 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
                     latest_snapshot = None
                 verdict = None
                 if latest_snapshot is not None:
+                    verifier_span=tracer.start('verifier.goal_completion','VERIFIER',{'purpose':'goal_completion'})
                     verdict, error = await asyncio.to_thread(verify_goal, model, completion_context(query, steps, latest_snapshot, session_context))
+                    tracer.end(verifier_span, status='ERROR' if error else 'OK', metrics={'goal_satisfied':bool(verdict and verdict.goal_satisfied)})
                     steps[-1].completion_verifier_error = error
                     if error is None:
                         steps[-1].completion_decision = verdict.decision
@@ -208,5 +223,5 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
     snapshot = snapshot or {'environment': {}, 'environment_restored': False, 'tickets': []}
     result = RunResponse(task_id=state['task_id'], answer=state['answer'], status=state['status'],
                          success=snapshot['environment_restored'], environment=snapshot['environment'],
-                         trajectory=steps, tickets=snapshot['tickets'], goal_satisfied_at_step=state.get('goal_satisfied_at_step'), pending_approval=state.get('pending_approval'))
+                         trajectory=steps, tickets=snapshot['tickets'], goal_satisfied_at_step=state.get('goal_satisfied_at_step'), pending_approval=state.get('pending_approval'), trace_id=tracer.record.trace_id)
     return result

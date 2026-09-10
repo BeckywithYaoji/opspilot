@@ -1,0 +1,178 @@
+[
+  {
+    "trace_id": "trace-af0e3ff0-61b4-4981-adf9-594ce8ed55e6",
+    "session_id": "a8d7e206-680c-4e8a-bc4c-f69735a92d53",
+    "memory_loaded": false,
+    "memory_error": null,
+    "incident_memory_error": null,
+    "pending_approval": null,
+    "goal_satisfied_at_step": null,
+    "task_id": "34ccc77e-075e-45df-a534-c0b80fecdafc",
+    "answer": "模型调用失败或响应无效，请检查 LLM 配置、网络及工具调用兼容性。",
+    "status": "FAILED",
+    "success": false,
+    "environment": {
+      "dev-server": {
+        "reachable": true,
+        "ports": {
+          "22": false
+        },
+        "services": {
+          "sshd": "stopped"
+        },
+        "restart_permission": true
+      }
+    },
+    "trajectory": [
+      {
+        "step": 1,
+        "tool": "check_port",
+        "arguments": {
+          "host": "dev-server",
+          "port": 22
+        },
+        "observation": {
+          "host": "dev-server",
+          "port": 22,
+          "status": "closed"
+        },
+        "transport": "mcp",
+        "repeated": false,
+        "blocked": false,
+        "block_reason": null,
+        "state_revision": 0,
+        "goal_satisfied_after_step": false,
+        "completion_decision": null,
+        "completion_verifier_error": "completion_verifier_unavailable_or_invalid",
+        "unresolved_requirements": [],
+        "permission_decision": null,
+        "risk_level": null,
+        "approval_id": null
+      }
+    ],
+    "tickets": [],
+    "agent_status": "FAILED",
+    "environment_restored": false,
+    "resolution_status": "FAILED",
+    "handled": false
+  },
+  {
+    "trace_id": "trace-e653c5dd-f460-4e55-a751-3ba22b00bb1d",
+    "session_id": "f3a444d1-c8ba-4308-983a-7170cb2bbf4c",
+    "memory_loaded": false,
+    "memory_error": null,
+    "incident_memory_error": null,
+    "pending_approval": {
+      "approval_id": "7d98d392-4b1b-4730-85e9-ba58ecf05bee",
+      "task_id": "18106a21-ba44-4fe9-8173-b95e2f66274a",
+      "session_id": "f3a444d1-c8ba-4308-983a-7170cb2bbf4c",
+      "scenario": "repairable",
+      "trace_id": "trace-e653c5dd-f460-4e55-a751-3ba22b00bb1d",
+      "tool_name": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "risk_level": "STATE_CHANGING",
+      "reason_code": "state_changing_operation",
+      "status": "PENDING"
+    },
+    "goal_satisfied_at_step": null,
+    "task_id": "18106a21-ba44-4fe9-8173-b95e2f66274a",
+    "answer": "Waiting for human approval.",
+    "status": "AWAITING_APPROVAL",
+    "success": false,
+    "environment": {
+      "dev-server": {
+        "reachable": true,
+        "ports": {
+          "22": false
+        },
+        "services": {
+          "sshd": "stopped"
+        },
+        "restart_permission": true
+      }
+    },
+    "trajectory": [
+      {
+        "step": 1,
+        "tool": "search_runbook",
+        "arguments": {
+          "query": "SSH recovery"
+        },
+        "observation": {
+          "status": "ok",
+          "query": "SSH recovery",
+          "results": [
+            {
+              "source": "ssh-troubleshooting.md",
+              "section": "SSH Troubleshooting",
+              "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+              "score": 0.7088908273812504
+            },
+            {
+              "source": "ssh-troubleshooting.md",
+              "section": "Verify",
+              "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+              "score": 0.6799236936864863
+            },
+            {
+              "source": "permission-denied.md",
+              "section": "Permission Denied",
+              "content": "Check file ownership, mode bits, ACLs, and the effective user. Use sudo only when authorized, then retry and record the denied resource.",
+              "score": 0.6266325882185186
+            },
+            {
+              "source": "service-verification.md",
+              "section": "Service Verification",
+              "content": "After recovery, check health endpoints, process status, logs, and a representative request. Record evidence and monitor for recurrence.",
+              "score": 0.5814582988930284
+            }
+          ]
+        },
+        "transport": "mcp",
+        "repeated": false,
+        "blocked": false,
+        "block_reason": null,
+        "state_revision": 0,
+        "goal_satisfied_after_step": false,
+        "completion_decision": null,
+        "completion_verifier_error": "completion_verifier_unavailable_or_invalid",
+        "unresolved_requirements": [],
+        "permission_decision": null,
+        "risk_level": null,
+        "approval_id": null
+      },
+      {
+        "step": 2,
+        "tool": "restart_service",
+        "arguments": {
+          "host": "dev-server",
+          "service": "sshd"
+        },
+        "observation": {
+          "status": "pending_approval",
+          "approval_id": "7d98d392-4b1b-4730-85e9-ba58ecf05bee"
+        },
+        "transport": "mcp",
+        "repeated": false,
+        "blocked": true,
+        "block_reason": "approval_required",
+        "state_revision": 0,
+        "goal_satisfied_after_step": false,
+        "completion_decision": null,
+        "completion_verifier_error": null,
+        "unresolved_requirements": [],
+        "permission_decision": "REQUIRE_APPROVAL",
+        "risk_level": "STATE_CHANGING",
+        "approval_id": "7d98d392-4b1b-4730-85e9-ba58ecf05bee"
+      }
+    ],
+    "tickets": [],
+    "agent_status": "AWAITING_APPROVAL",
+    "environment_restored": false,
+    "resolution_status": "FAILED",
+    "handled": false
+  }
+]

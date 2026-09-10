@@ -240,9 +240,33 @@ pytest -v
 
 本地测试出现一条上游 Starlette/AnyIO 弃用警告，不影响执行。JSONL 写入锁仅适用于单进程 Demo，不提供跨进程协调；不要将此 V0 当作生产运维服务。
 
-## 11. Future Work
+## 11. V2 Agentic RAG
 
-V1 MCP 已完成。后续仅记录、不实现：V2 Agentic RAG；V3 Redis Memory；V4 Guardrail + HITL；V5 Benchmark。
+V2 在 V1 的 MCP 工具发现和轨迹机制上增加了一个模型可选择的 `search_runbook` 工具。运行时不会预先检索；模型根据任务自行决定是否查询本地运维手册，然后把检索 Observation 作为普通 `ToolMessage` 继续推理。索引由显式命令建立，服务启动不会下载模型、重建索引或暗中联网。
+
+本地手册位于 `data/runbooks/`，索引默认写入 `data/qdrant`。首次使用时执行：
+
+```bash
+python scripts/index_runbooks.py
+python scripts/eval_retrieval.py --index data/qdrant
+```
+
+评估脚本读取 `data/eval/retrieval_cases.json`，输出 Recall@1、Recall@3 和 Recall@4，并可用 `--output report.json` 保存完整结果。当前评估结果为 Recall@1 **0.667**、Recall@3 **1.000**、Recall@4 **1.000**。`retrieval_decision_cases.json` 是选择性检索的评估数据，不是运行时规则。
+
+实际 DeepSeek 轨迹保存在以下完整响应文件中：
+
+- Case C（无需检索）：`data/demo-v2-no-rag.json`。模型直接检查端口和服务，未调用 `search_runbook`；最终 `COMPLETED`、`success=false`，环境保持故障状态。
+- Case D（检索后验证恢复）：`data/demo-v2-rag-verify.json`。模型选择检索并完成 sshd 重启、服务和 22 端口复验；最终 `COMPLETED`、`success=true`。
+- Case E（检索后权限升级）：`data/demo-v2-rag-escalation.json`。模型选择检索，重启因 `permission denied` 失败后创建工单；最终 `COMPLETED`、`success=false`，服务仍未恢复。
+- V1 回归 Case A/B：`data/demo-repairable.json`、`data/demo-permission_denied.json`。
+
+所有上述轨迹中的工具调用均带有 `transport=mcp`；响应保留 V1 的状态、环境、工单和轨迹字段。检索服务不可用时会返回安全错误 Observation，由模型自行决定后续处理。
+
+当前限制：检索只使用本地向量索引，不包含 BM25、混合检索、重排、记忆或自动索引；真实运行需要先建立索引并配置支持工具调用的模型。评估集合较小，Recall 仅用于验证当前手册和查询，不代表生产检索质量。
+
+## 12. Future Work
+
+后续仅记录、不实现：V3 Redis Memory；V4 Guardrail + HITL；V5 Benchmark。
 
 
 ## V1 MCP Architecture

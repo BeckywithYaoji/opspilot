@@ -4,14 +4,16 @@ import pytest
 from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 
-from app.main import app, get_model, get_trajectory_path, get_memory_store
+from app.main import app, get_model, get_trajectory_path, get_memory_store, get_approval_store
 from tests.test_memory import FakeSessionMemoryStore
+from app.approval import ApprovalStore
 from tests.test_agent import ScriptedModel, call
 
 
 @pytest.fixture
 def client(tmp_path):
     app.dependency_overrides[get_memory_store] = lambda: FakeSessionMemoryStore()
+    app.dependency_overrides[get_approval_store] = lambda: None
     app.dependency_overrides[get_model] = lambda: ScriptedModel([
         call('restart_service', {'host': 'dev-server', 'service': 'sshd'}),
         AIMessage(content='操作结束。'),

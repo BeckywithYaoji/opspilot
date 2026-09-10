@@ -1,0 +1,22 @@
+{
+  "status": "approved",
+  "approval_id": "ee97b52e-6a13-42f0-9415-04582525ae00",
+  "tool": "restart_service",
+  "observation": {
+    "status": "success",
+    "message": "sshd restarted successfully"
+  },
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": true
+      },
+      "services": {
+        "sshd": "running"
+      },
+      "restart_permission": true
+    }
+  },
+  "environment_restored": true
+}

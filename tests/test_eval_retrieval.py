@@ -31,7 +31,7 @@ def test_evaluate_cases_calls_retriever_and_reports_all_metrics():
 
 def test_api_exposes_only_the_existing_routes():
     routes = {route.path for route in app.routes if isinstance(route, APIRoute)}
-    assert routes == {"/health", "/api/agent/run"}
+    assert routes == {"/health", "/api/agent/run", "/api/agent/approval"}
 
 
 def test_eval_data_has_retrieval_and_decision_cases():

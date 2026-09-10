@@ -1,0 +1,180 @@
+{
+  "session_id": "787d4bc8-23e5-402d-82e5-48316abc6dc8",
+  "memory_loaded": false,
+  "memory_error": null,
+  "incident_memory_error": null,
+  "pending_approval": {
+    "approval_id": "ee97b52e-6a13-42f0-9415-04582525ae00",
+    "task_id": "4584c634-7bec-4dca-9160-4f7ca307310b",
+    "session_id": "787d4bc8-23e5-402d-82e5-48316abc6dc8",
+    "scenario": "repairable",
+    "tool_name": "restart_service",
+    "arguments": {
+      "host": "dev-server",
+      "service": "sshd"
+    },
+    "risk_level": "STATE_CHANGING",
+    "reason_code": "state_changing_operation",
+    "status": "PENDING"
+  },
+  "goal_satisfied_at_step": null,
+  "task_id": "4584c634-7bec-4dca-9160-4f7ca307310b",
+  "answer": "Waiting for human approval.",
+  "status": "AWAITING_APPROVAL",
+  "success": false,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": false
+      },
+      "services": {
+        "sshd": "stopped"
+      },
+      "restart_permission": true
+    }
+  },
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "ssh"
+      },
+      "observation": {
+        "status": "failed",
+        "error": "unknown service"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": false,
+      "completion_decision": "CONTINUE",
+      "completion_verifier_error": null,
+      "unresolved_requirements": [
+        "SSH service status on dev-server has not been properly confirmed: the check used service name 'ssh' and returned 'unknown service'; the snapshot indicates the actual unit 'sshd' is stopped and port 22 is closed.",
+        "No recovery action has been attempted or evidenced: although restart_permission is true, no restart/start of sshd was executed.",
+        "Post-recovery verification is missing: environment_restored is false and there is no observation confirming sshd running and port 22 open."
+      ],
+      "permission_decision": null,
+      "risk_level": null,
+      "approval_id": null
+    },
+    {
+      "step": 2,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": false,
+      "completion_decision": "CONTINUE",
+      "completion_verifier_error": null,
+      "unresolved_requirements": [
+        "SSH service on dev-server is not restored: latest snapshot shows sshd stopped and port 22 closed, with environment_restored false",
+        "No recovery action was actually attempted (only a status check of the service and port); restart_permission is true but no restart/start operation was executed",
+        "Verification of restored SSH service (port 22 open / sshd running) has not been performed after any recovery action",
+        "The service check itself failed with 'unknown service', so a valid service status was never confirmed and may need re-checking with the correct service name"
+      ],
+      "permission_decision": null,
+      "risk_level": null,
+      "approval_id": null
+    },
+    {
+      "step": 3,
+      "tool": "search_runbook",
+      "arguments": {
+        "query": "SSH 服务检查与恢复规范"
+      },
+      "observation": {
+        "status": "ok",
+        "query": "SSH 服务检查与恢复规范",
+        "results": [
+          {
+            "source": "ssh-troubleshooting.md",
+            "section": "SSH Troubleshooting",
+            "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+            "score": 0.7263020931846437
+          },
+          {
+            "source": "ssh-troubleshooting.md",
+            "section": "Verify",
+            "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+            "score": 0.71036245174946
+          },
+          {
+            "source": "permission-denied.md",
+            "section": "Permission Denied",
+            "content": "Check file ownership, mode bits, ACLs, and the effective user. Use sudo only when authorized, then retry and record the denied resource.",
+            "score": 0.632179440700132
+          },
+          {
+            "source": "port-troubleshooting.md",
+            "section": "Port Troubleshooting",
+            "content": "Test DNS, firewall rules, and listener state. Use a TCP connection test from the affected host and verify the expected process owns the port.",
+            "score": 0.5703740796225615
+          }
+        ]
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": false,
+      "completion_decision": "CONTINUE",
+      "completion_verifier_error": null,
+      "unresolved_requirements": [
+        "SSH 服务（sshd）仍处于 stopped 状态，端口 22 未开放，尚未执行任何恢复操作",
+        "需要按运维规范执行恢复（如重启 sshd 服务）",
+        "恢复后需确认 sshd 正常运行且端口 22 开放，完成验证",
+        "若恢复失败，需按规范收集输出与时间戳并升级（升级票未创建）"
+      ],
+      "permission_decision": null,
+      "risk_level": null,
+      "approval_id": null
+    },
+    {
+      "step": 4,
+      "tool": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "status": "pending_approval",
+        "approval_id": "ee97b52e-6a13-42f0-9415-04582525ae00"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": true,
+      "block_reason": "approval_required",
+      "state_revision": 0,
+      "goal_satisfied_after_step": false,
+      "completion_decision": null,
+      "completion_verifier_error": null,
+      "unresolved_requirements": [],
+      "permission_decision": "REQUIRE_APPROVAL",
+      "risk_level": "STATE_CHANGING",
+      "approval_id": "ee97b52e-6a13-42f0-9415-04582525ae00"
+    }
+  ],
+  "tickets": [],
+  "agent_status": "AWAITING_APPROVAL",
+  "environment_restored": false,
+  "resolution_status": "FAILED",
+  "handled": false
+}

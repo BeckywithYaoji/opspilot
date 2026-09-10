@@ -3,7 +3,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
 
 
-Status = Literal['RUNNING', 'COMPLETED', 'MAX_STEPS_EXCEEDED', 'FAILED']
+Status = Literal['RUNNING', 'COMPLETED', 'MAX_STEPS_EXCEEDED', 'FAILED', 'AWAITING_APPROVAL']
 Scenario = Literal['repairable', 'permission_denied']
 
 
@@ -35,6 +35,9 @@ class TrajectoryStep(BaseModel):
     completion_decision: str | None = None
     completion_verifier_error: str | None = None
     unresolved_requirements: list[str] = Field(default_factory=list)
+    permission_decision: str | None = None
+    risk_level: str | None = None
+    approval_id: str | None = None
 
 
 class RunResponse(BaseModel):
@@ -42,6 +45,7 @@ class RunResponse(BaseModel):
     memory_loaded: bool = False
     memory_error: str | None = None
     incident_memory_error: str | None = None
+    pending_approval: dict | None = None
     goal_satisfied_at_step: int | None = None
     task_id: str
     answer: str

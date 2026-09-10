@@ -14,6 +14,8 @@ from app.mcp.client import OpsMCPClient
 from app.trajectory import DEFAULT_PATH, save_trajectory
 from app.reliability import ReliabilityRuntime
 from app.completion import verify_goal, completion_context
+from app.guardrails.permissions import decide_permission
+from app.approval import PendingApproval
 
 
 SYSTEM_PROMPT = """你是 IT Operations Agent，处理模拟服务器的运维任务。
@@ -43,16 +45,17 @@ class AgentState(TypedDict):
     steps: list[TrajectoryStep]
     latest_environment_snapshot: dict | None
     goal_satisfied_at_step: int | None
+    pending_approval: dict | None
 
 
 def run_agent(query: str, scenario: str, model: ChatModel, *, max_steps: int = 8,
-              trajectory_path: Path = DEFAULT_PATH, session_id: str | None = None, memory_store=None) -> RunResponse:
+              trajectory_path: Path = DEFAULT_PATH, session_id: str | None = None, memory_store=None, approval_store=None) -> RunResponse:
     if max_steps < 1:
         raise ValueError('max_steps must be positive')
-    return asyncio.run(_run_with_memory(query, scenario, model, max_steps, trajectory_path, session_id, memory_store))
+    return asyncio.run(_run_with_memory(query, scenario, model, max_steps, trajectory_path, session_id, memory_store, approval_store))
 
 
-async def _run_with_memory(query, scenario, model, max_steps, trajectory_path, session_id, memory_store):
+async def _run_with_memory(query, scenario, model, max_steps, trajectory_path, session_id, memory_store, approval_store=None):
     from app.memory.session import SessionMemory, update_memory, render_context
     memory = SessionMemory()
     error = None
@@ -66,7 +69,7 @@ async def _run_with_memory(query, scenario, model, max_steps, trajectory_path, s
             error = 'memory_load_failed'
     context = render_context(memory)
     try:
-        result = await _run_agent(query, scenario, model, max_steps, trajectory_path, context)
+        result = await _run_agent(query, scenario, model, max_steps, trajectory_path, context, sid, approval_store)
         result.session_id = sid
         result.memory_loaded = loaded
         if memory_store is not None and error is None:
@@ -85,11 +88,11 @@ async def _run_with_memory(query, scenario, model, max_steps, trajectory_path, s
                 pass
 
 
-async def _run_agent(query, scenario, model, max_steps, trajectory_path, session_context='') -> RunResponse:
+async def _run_agent(query, scenario, model, max_steps, trajectory_path, session_context='', session_id=None, approval_store=None) -> RunResponse:
     state = {
         'messages': [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=session_context), HumanMessage(content=query)],
         'task_id': str(uuid4()), 'step_count': 0, 'max_steps': max_steps,
-    'status': 'RUNNING', 'answer': '', 'steps': [], 'latest_environment_snapshot': None, 'goal_satisfied_at_step': None,
+    'status': 'RUNNING', 'answer': '', 'steps': [], 'latest_environment_snapshot': None, 'goal_satisfied_at_step': None, 'pending_approval': None,
     }
     # Keep executed steps even if the MCP connection fails before the graph returns.
     steps: list[TrajectoryStep] = []
@@ -128,6 +131,18 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
                 return {'messages': messages, 'steps': steps, 'step_count': count,
                         'status': 'MAX_STEPS_EXCEEDED', 'answer': '已达到工具调用上限，任务尚未完成。'}
             decision = runtime.admit(call['name'], call['args'])
+            permission = decide_permission(call['name'], call['args'])
+            if permission.decision == 'REQUIRE_APPROVAL' and approval_store is not None:
+                pending = PendingApproval(task_id=state['task_id'], session_id=session_id, scenario=scenario, tool_name=call['name'], arguments=call['args'], risk_level=permission.risk_level, reason_code=permission.reason_code)
+                if approval_store is None:
+                    return {'messages': messages, 'steps': steps, 'step_count': count, 'status': 'FAILED', 'answer': 'Approval state persistence unavailable.'}
+                await approval_store.save(pending)
+                steps.append(TrajectoryStep(step=count + 1, tool=call['name'], arguments=call['args'],
+                                            observation={'status': 'pending_approval', 'approval_id': pending.approval_id},
+                                            transport='mcp', blocked=True, block_reason='approval_required',
+                                            permission_decision=permission.decision, risk_level=permission.risk_level,
+                                            approval_id=pending.approval_id, state_revision=runtime.state_revision))
+                return {'messages': messages, 'steps': steps, 'step_count': count, 'status': 'AWAITING_APPROVAL', 'answer': 'Waiting for human approval.', 'pending_approval': pending.model_dump()}
             if decision['blocked']:
                 observation = decision['observation']
                 count += 1
@@ -193,5 +208,5 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path, session
     snapshot = snapshot or {'environment': {}, 'environment_restored': False, 'tickets': []}
     result = RunResponse(task_id=state['task_id'], answer=state['answer'], status=state['status'],
                          success=snapshot['environment_restored'], environment=snapshot['environment'],
-                         trajectory=steps, tickets=snapshot['tickets'], goal_satisfied_at_step=state.get('goal_satisfied_at_step'))
+                         trajectory=steps, tickets=snapshot['tickets'], goal_satisfied_at_step=state.get('goal_satisfied_at_step'), pending_approval=state.get('pending_approval'))
     return result

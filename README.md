@@ -426,6 +426,23 @@ python scripts/eval_memory.py data/demo-v3-memory-eval-runs.json
 
 Incident Memory 与 Session Memory、Runbook RAG 分工不同：Redis 只保存当前会话上下文，Runbook Qdrant 保存正式规范，Incident Qdrant 保存过去已完成或已升级任务的结构化经验。任务结束后由 `IncidentExtractor` 从工具参数和 Observation 确定性生成 `IncidentRecord`，不 embedding 完整 trajectory；仅 `RESOLVED`/`ESCALATED` 且发生多步诊断或状态改变/建单的任务写入，`source_task_id` 保证幂等。Incident collection 为 `opspilot_incidents`，使用独立本地目录 `data/qdrant-incidents`，避免 Qdrant local 多进程目录锁。
 
+## V4 Tool Permission Guardrail + Human-in-the-loop
+
+工具调用在进入 MCP 前经过确定性权限策略：状态读取与检索工具为 `READ_ONLY/ALLOW`，`restart_service` 为 `STATE_CHANGING/REQUIRE_APPROVAL`，未知工具为 `SENSITIVE/DENY`。需要审批时任务返回 `AWAITING_APPROVAL`，冻结工具名、参数、场景和风险原因，并写入 Redis（默认 TTL 1800 秒）；MCP 不会收到该调用。通过 `POST /api/agent/approval` 传入 `approval_id` 与 `APPROVE` 或 `REJECT`，审批记录只能解析一次；批准后按冻结参数执行一次，拒绝则记录人工拒绝观察结果。
+
+示例：
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/agent/run \
+  -H 'content-type: application/json' \
+  -d '{"message":"恢复 dev-server 的 SSH 服务","scenario":"repairable"}'
+curl -X POST http://127.0.0.1:8000/api/agent/approval \
+  -H 'content-type: application/json' \
+  -d '{"approval_id":"<pending approval_id>","decision":"APPROVE"}'
+```
+
+审批策略、重放保护和“审批前不触发 MCP”由 `tests/test_guardrails.py` 覆盖。评估可运行 `python scripts/eval_hitl.py data/demo-v4-hitl-eval.json`。
+
 新增 MCP Tool `search_incident_memory(query, top_k=3)` 只搜索历史事件，返回摘要、状态和来源任务 ID。Agent 只有在用户询问类似历史或历史经验有助于诊断时才调用；历史结果必须作为证据，仍需检查当前环境，不能由 Python 自动触发修复。检索和写入失败都作为可降级事件，保留原 Agent 结果。
 
 真实验证：Incident Write 任务生成 `dev-server`/`sshd` 的 RESOLVED 记录；全新 Session 的 `staging-server` 查询调用 `search_incident_memory` 并检索到历史来源，同时检查当前 `staging-server`，发现 unknown host 后升级；简单端口查询没有 Incident 检索。见 `data/demo-v3.1-incident-write.json`、`data/demo-v3.1-cross-session.json`、`data/demo-v3.1-selective.json`。评估脚本为 `python scripts/eval_incident_memory.py`，当前小数据集的决策准确率与 Recall@1/3 均为 1.0，无必要检索率为 0.0。

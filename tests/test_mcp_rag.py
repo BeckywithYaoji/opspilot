@@ -1,6 +1,8 @@
 import asyncio
+import inspect
 
 from app.mcp.client import OpsMCPClient
+from app.mcp.server import create_server
 
 
 class _Result:
@@ -9,6 +11,10 @@ class _Result:
         'status': 'ok', 'query': 'ssh', 'results': [],
     }
     content = []
+
+
+def test_server_default_index_matches_index_script():
+    assert inspect.signature(create_server).parameters['index_path'].default == 'data/qdrant'
 
 
 def test_search_runbook_result_is_structured():

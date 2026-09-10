@@ -12,7 +12,7 @@ from app.rag.retriever import RunbookRetriever
 from app.tools import build_tools
 
 
-def create_server(scenario: str, index_path: str | Path = 'data/runbook-index') -> MCPServer:
+def create_server(scenario: str, index_path: str | Path = 'data/qdrant') -> MCPServer:
     environment = MockEnvironment(scenario)
     retriever = RunbookRetriever(index_path)
     server = MCPServer('ops-mcp-server', log_level='ERROR')
@@ -40,6 +40,6 @@ def create_server(scenario: str, index_path: str | Path = 'data/runbook-index') 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='OpsPilot MCP stdio tool server')
     parser.add_argument('--scenario', choices=['repairable', 'permission_denied'], default='repairable')
-    parser.add_argument('--index-path', default='data/runbook-index')
+    parser.add_argument('--index-path', default='data/qdrant')
     args = parser.parse_args()
     create_server(args.scenario, args.index_path).run(transport='stdio')

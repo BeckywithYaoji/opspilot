@@ -30,6 +30,7 @@ class TrajectoryStep(BaseModel):
     blocked: bool = False
     block_reason: str | None = None
     state_revision: int = 0
+    goal_satisfied_after_step: bool = False
 
 
 class RunResponse(BaseModel):

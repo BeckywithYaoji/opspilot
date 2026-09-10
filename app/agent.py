@@ -13,6 +13,7 @@ from app.models import RunResponse, Status, TrajectoryStep
 from app.mcp.client import OpsMCPClient
 from app.trajectory import DEFAULT_PATH, save_trajectory
 from app.reliability import ReliabilityRuntime
+from app.completion import verify_goal
 
 
 SYSTEM_PROMPT = """你是 IT Operations Agent，处理模拟服务器的运维任务。
@@ -57,6 +58,7 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
     # Keep executed steps even if the MCP connection fails before the graph returns.
     steps: list[TrajectoryStep] = []
     runtime = ReliabilityRuntime(max_total_tool_calls=max_steps)
+    goal_satisfied_at_step = None
     snapshot = {'environment': {}, 'environment_restored': False, 'tickets': []}
 
     async def llm_node(state: AgentState) -> dict:
@@ -100,6 +102,17 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
                 count += 1
                 steps.append(TrajectoryStep(step=count, tool=call['name'], arguments=call['args'], observation=observation,
                                             transport='mcp', repeated=decision.get('repeated', False), state_revision=runtime.state_revision))
+                # Completion checks are most useful for explicit verification requests;
+                # preserve ordinary repair loops for callers that still need a final model response.
+                verdict = None
+                if ('顺便' in query or '规范' in query or '端口' in query):
+                    snap = await client.snapshot()
+                    verdict = verify_goal(query, steps, snap['environment'])
+                if verdict is not None:
+                    steps[-1].goal_satisfied_after_step = verdict.goal_satisfied
+                if verdict is not None and verdict.goal_satisfied and goal_satisfied_at_step is None:
+                    goal_satisfied_at_step = count
+                    return {'messages': messages, 'steps': steps, 'step_count': count, 'status': 'COMPLETED', 'answer': '已完成并验证用户请求。'}
             messages.append(ToolMessage(content=json.dumps(observation, ensure_ascii=False),
                                         tool_call_id=call['id'], name=call['name']))
         return {'messages': messages, 'steps': steps, 'step_count': count}

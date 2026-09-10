@@ -1,0 +1,94 @@
+{
+  "task_id": "0aaa9cd3-52a8-45e8-9331-7e11504019ce",
+  "answer": "SSH 已恢复。\n\n**已验证事实**\n- 检查发现：dev-server 的 `sshd` 服务处于 `stopped` 状态，22 端口为 `closed`（这与\"昨天可用、今天连不上\"的现象一致）。\n- 修复后复查：`sshd` 状态 `running`，22 端口 `open`。\n\n**已完成操作**\n- 对 dev-server 执行 `sshd` 重启，返回成功。\n\n**剩余问题 / 建议**\n- 目前只能确认服务与端口恢复，未验证实际登录（例如密钥/密码认证、防火墙规则）是否正常，建议你实际尝试一次 SSH 连接确认。\n- 服务为何停止的根因尚未查明（可能是崩溃、OOM、配置变更或人为操作）。若再次出现，建议排查 `sshd` 日志与主机资源，避免重复中断。",
+  "status": "COMPLETED",
+  "success": true,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": true
+      },
+      "services": {
+        "sshd": "running"
+      },
+      "restart_permission": true
+    }
+  },
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "host": "dev-server",
+        "service": "sshd",
+        "status": "stopped"
+      },
+      "transport": "mcp"
+    },
+    {
+      "step": 2,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp"
+    },
+    {
+      "step": 3,
+      "tool": "restart_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "status": "success",
+        "message": "sshd restarted successfully"
+      },
+      "transport": "mcp"
+    },
+    {
+      "step": 4,
+      "tool": "check_service",
+      "arguments": {
+        "host": "dev-server",
+        "service": "sshd"
+      },
+      "observation": {
+        "host": "dev-server",
+        "service": "sshd",
+        "status": "running"
+      },
+      "transport": "mcp"
+    },
+    {
+      "step": 5,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "open"
+      },
+      "transport": "mcp"
+    }
+  ],
+  "tickets": [],
+  "agent_status": "COMPLETED",
+  "environment_restored": true,
+  "resolution_status": "RESOLVED",
+  "handled": true
+}

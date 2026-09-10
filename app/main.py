@@ -8,7 +8,7 @@ from app.models import RunRequest, RunResponse
 from app.trajectory import DEFAULT_PATH
 
 
-app = FastAPI(title='OpsPilot V0', docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title='OpsPilot V1 MCP', docs_url=None, redoc_url=None, openapi_url=None)
 
 
 def get_model() -> CompatibleChatModel:

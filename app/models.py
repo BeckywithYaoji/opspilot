@@ -1,6 +1,6 @@
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
 
 
 Status = Literal['RUNNING', 'COMPLETED', 'MAX_STEPS_EXCEEDED', 'FAILED']
@@ -25,6 +25,7 @@ class TrajectoryStep(BaseModel):
     tool: str
     arguments: dict[str, Any]
     observation: dict[str, Any]
+    transport: Literal['local', 'mcp'] = 'local'
 
 
 class RunResponse(BaseModel):
@@ -35,3 +36,27 @@ class RunResponse(BaseModel):
     environment: dict[str, Any]
     trajectory: list[TrajectoryStep]
     tickets: list[dict[str, str]] = Field(default_factory=list)
+
+    @computed_field
+    @property
+    def agent_status(self) -> Status:
+        return self.status
+
+    @computed_field
+    @property
+    def environment_restored(self) -> bool:
+        return self.success
+
+    @computed_field
+    @property
+    def resolution_status(self) -> Literal['RESOLVED', 'ESCALATED', 'FAILED']:
+        if self.success:
+            return 'RESOLVED'
+        if self.tickets:
+            return 'ESCALATED'
+        return 'FAILED'
+
+    @computed_field
+    @property
+    def handled(self) -> bool:
+        return self.status == 'COMPLETED' and self.resolution_status != 'FAILED'

@@ -1,4 +1,5 @@
 """The graph controls the loop, not the domain-specific tool sequence."""
+import asyncio
 import json
 from pathlib import Path
 from typing import Annotated, Protocol, TypedDict
@@ -7,11 +8,9 @@ from uuid import uuid4
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage, ToolMessage
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
-from pydantic import ValidationError
 
-from app.environment import MockEnvironment
 from app.models import RunResponse, Status, TrajectoryStep
-from app.tools import build_tools
+from app.mcp.client import OpsMCPClient
 from app.trajectory import DEFAULT_PATH, save_trajectory
 
 
@@ -44,12 +43,22 @@ def run_agent(query: str, scenario: str, model: ChatModel, *, max_steps: int = 8
               trajectory_path: Path = DEFAULT_PATH) -> RunResponse:
     if max_steps < 1:
         raise ValueError('max_steps must be positive')
-    environment = MockEnvironment(scenario)
-    tools = build_tools(environment)
+    return asyncio.run(_run_agent(query, scenario, model, max_steps, trajectory_path))
 
-    def llm_node(state: AgentState) -> dict:
+
+async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunResponse:
+    state = {
+        'messages': [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=query)],
+        'task_id': str(uuid4()), 'step_count': 0, 'max_steps': max_steps,
+        'status': 'RUNNING', 'answer': '', 'steps': [],
+    }
+    # Keep executed steps even if the MCP connection fails before the graph returns.
+    steps: list[TrajectoryStep] = []
+    snapshot = {'environment': {}, 'environment_restored': False, 'tickets': []}
+
+    async def llm_node(state: AgentState) -> dict:
         try:
-            reply = model.invoke(state['messages'], list(tools.values()))
+            reply = await asyncio.to_thread(model.invoke, state['messages'], tools)
             if not isinstance(reply, AIMessage) or reply.invalid_tool_calls:
                 raise ValueError('invalid model response')
             if reply.tool_calls:
@@ -69,41 +78,40 @@ def run_agent(query: str, scenario: str, model: ChatModel, *, max_steps: int = 8
             # Provider errors can contain credentials or raw reasoning; do not persist them.
             return {'status': 'FAILED', 'answer': '模型调用失败或响应无效，请检查 LLM 配置、网络及工具调用兼容性。'}
 
-    def tool_node(state: AgentState) -> dict:
-        messages, steps = [], list(state['steps'])
+    async def tool_node(state: AgentState) -> dict:
+        messages = []
         count = state['step_count']
         for call in state['messages'][-1].tool_calls:
             if count >= state['max_steps']:
                 return {'messages': messages, 'steps': steps, 'step_count': count,
                         'status': 'MAX_STEPS_EXCEEDED', 'answer': '已达到工具调用上限，任务尚未完成。'}
-            selected = tools.get(call['name'])
-            try:
-                observation = ({'status': 'failed', 'error': 'unknown tool'} if selected is None
-                               else selected.invoke(call['args']))
-            except ValidationError:
-                observation = {'status': 'failed', 'error': 'invalid tool arguments'}
-            except Exception:
-                observation = {'status': 'failed', 'error': 'tool execution failed'}
+            observation = await client.call_tool(call['name'], call['args'])
             count += 1
             steps.append(TrajectoryStep(step=count, tool=call['name'],
-                                        arguments=call['args'], observation=observation))
+                                        arguments=call['args'], observation=observation, transport='mcp'))
             messages.append(ToolMessage(content=json.dumps(observation, ensure_ascii=False),
                                         tool_call_id=call['id'], name=call['name']))
         return {'messages': messages, 'steps': steps, 'step_count': count}
 
-    graph = StateGraph(AgentState)
-    graph.add_node('llm', llm_node)
-    graph.add_node('tools', tool_node)
-    graph.add_edge(START, 'llm')
-    graph.add_conditional_edges('llm', lambda state: 'tools' if state['status'] == 'RUNNING' else END)
-    graph.add_conditional_edges('tools', lambda state: 'llm' if state['status'] == 'RUNNING' else END)
-    state = graph.compile().invoke({
-        'messages': [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=query)],
-        'task_id': str(uuid4()), 'step_count': 0, 'max_steps': max_steps,
-        'status': 'RUNNING', 'answer': '', 'steps': [],
-    }, config={'recursion_limit': 2 * max_steps + 4})
+    try:
+        async with OpsMCPClient(scenario) as client:
+            tools = await client.list_tools()
+            if not tools:
+                raise ValueError('MCP server has no tools')
+            graph = StateGraph(AgentState)
+            graph.add_node('llm', llm_node)
+            graph.add_node('tools', tool_node)
+            graph.add_edge(START, 'llm')
+            graph.add_conditional_edges('llm', lambda state: 'tools' if state['status'] == 'RUNNING' else END)
+            graph.add_conditional_edges('tools', lambda state: 'llm' if state['status'] == 'RUNNING' else END)
+            state = await graph.compile().ainvoke(state, config={'recursion_limit': 2 * max_steps + 4})
+            snapshot = await client.snapshot()
+    except Exception:
+        state['status'] = 'FAILED'
+        state['answer'] = 'MCP runtime failed: server, discovery or environment snapshot unavailable.'
+
     result = RunResponse(task_id=state['task_id'], answer=state['answer'], status=state['status'],
-                         success=environment.ssh_restored, environment=environment.snapshot(),
-                         trajectory=state['steps'], tickets=environment.tickets)
+                         success=snapshot['environment_restored'], environment=snapshot['environment'],
+                         trajectory=steps, tickets=snapshot['tickets'])
     save_trajectory(query, scenario, result, trajectory_path)
     return result

@@ -1,5 +1,7 @@
 # OpsPilot — Autonomous IT Operations Agent
 
+当前版本：**V1 MCP**。V0 基线为 `9249abc`；V0 说明与实际轨迹保留如下，V1 架构和验收记录见文末。
+
 ## 1. 项目解决什么问题
 
 V0 用自然语言诊断模拟服务器 `dev-server` 的 SSH 故障，尝试恢复，并在权限不足时由模型决定是否创建人工工单。仅操作内存中的 Mock Environment，不连接真实服务器，工单也只是模拟记录。
@@ -240,4 +242,94 @@ pytest -v
 
 ## 11. Future Work
 
-仅记录，不在 V0 实现：V1 MCP；V2 Agentic RAG；V3 Redis Memory；V4 Guardrail + HITL；V5 Benchmark。
+V1 MCP 已完成。后续仅记录、不实现：V2 Agentic RAG；V3 Redis Memory；V4 Guardrail + HITL；V5 Benchmark。
+
+
+## V1 MCP Architecture
+
+V0 在 Agent 进程内调用 Python 工具；V1 使用官方 `mcp==2.2.0` SDK，通过 stdio 跨进程调用独立的 `ops-mcp-server`。Agent 只使用工具名称、描述、Input Schema 与结果，不导入 `app.tools` 或 `app.environment`。Server 复用已有四个工具及状态变更逻辑，不增加业务能力。
+
+```mermaid
+flowchart TD
+    A[FastAPI] --> G[LangGraph Agent Runtime]
+    G --> L[LLM]
+    L -->|模型选择工具| C[MCP Client]
+    C -->|stdio：进程边界| S[Ops MCP Server]
+    S --> T[四个现有 Ops Tool]
+    T --> E[Mock Environment]
+    E -->|Tool Result| S
+    S -->|Observation| C
+    C -->|ToolMessage| G
+    S -->|只读 Resource：最终状态| A
+```
+
+每个 API 请求启动自己的 MCP 子进程，并在任务结束后关闭；同一请求的所有调用共享 Server 内的环境，多个请求互不污染。`scenario` 只作为 Server 启动参数初始化环境，不参与工具路由。进程生命周期由官方 SDK 管理。
+
+Client 在每次任务连接时调用 `list_tools()`，把发现的 name/description/input_schema 映射为标准 function tool 定义，交给现有 LangChain Core `convert_to_openai_tool` 序列化；没有复制四套 Schema，也没有引入额外 Adapter 框架。实际发现的工具为 `check_port`、`check_service`、`restart_service`、`create_ticket`，完整 Schema 保存于 [实际 Tool Discovery](data/demo-v1-mcp-tools.json)。
+
+`ops://environment` 是只读 MCP Resource，返回最终环境、是否恢复和模拟工单，供 API 汇报与验收使用；它不是第五个工具，也不会提供给 LLM 选择。
+
+### 启动与 Demo
+
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+无需第二个终端常驻 MCP Server。每次 POST 请求会自动运行等价于以下命令的子进程（使用同一 Python 环境）：
+
+```bash
+python -m app.mcp.server --scenario repairable
+# 或 --scenario permission_denied
+```
+
+该命令使用 stdio 等待 MCP 客户端输入，不监听 HTTP 端口；正式使用只需启动 FastAPI。第 7 节两条 curl 命令保持不变，现已走 MCP。模型配置沿用本地 `.env`。
+
+### 兼容性与错误处理
+
+保留 `status`、`success`、`environment`、`trajectory`、`tickets` 等 V0 字段；每个新步骤增加 `transport: "mcp"`，旧轨迹仍可读取（未标记时默认为 local）。新增字段含义：
+
+| 字段 | 含义 |
+| --- | --- |
+| agent_status | 与原 status 一致，描述 Agent 执行状态 |
+| environment_restored | 与原 success 一致，来自 Server 最终快照 |
+| resolution_status | 快照已恢复为 RESOLVED；否则有工单为 ESCALATED；否则 FAILED |
+| handled | Agent 为 COMPLETED 且已恢复或已升级处理 |
+
+服务不可用、发现失败、最终快照无法读取会返回 `FAILED` 并保存已有步骤；无法获取快照时 `environment={}` 表示未知，不伪造环境。工具不存在、参数错误、工具调用错误、畸形结果会变成失败 Observation 返回模型。MCP 请求等待上限 5 秒，没有自动重试；原工具调用预算仍为 8 次。
+
+### V1 真实模型验收（2026-09-10）
+
+通过实际 FastAPI HTTP 请求调用 `deepseek-flash`，所有步骤均为 `transport=mcp`。两份完整响应均与 `data/trajectories.jsonl` 对应记录核验一致。
+
+**Case A** — task `0aaa9cd3-52a8-45e8-9331-7e11504019ce`
+
+```text
+1. check_service → stopped
+2. check_port → closed
+3. restart_service → success
+4. check_service → running
+5. check_port → open
+```
+
+结果：`COMPLETED / RESOLVED`，`environment_restored=true`、`handled=true`。[完整响应](data/demo-v1-mcp-repairable.json)。
+
+**Case B** — task `48441fb5-f71b-411c-93b7-e6c127478129`
+
+```text
+1. check_service → stopped
+2. check_port → closed
+3. restart_service → permission denied
+4. create_ticket → INC-17ab0ec716e5
+```
+
+结果：`COMPLETED / ESCALATED`，`environment_restored=false`、`handled=true`。[完整响应](data/demo-v1-mcp-permission-denied.json)。
+
+Case A 最终 sshd=running、22 端口 open。Case B 只有一次 restart，收到 permission denied 后由模型选择 create_ticket；最终 sshd=stopped、22 端口 closed，已升级人工处理。
+
+### V1 测试与限制
+
+实际运行 `pytest -v`：**40 passed，1 条原有上游弃用警告**。原 25 个测试保留，仅为新增 transport 字段调整一处完整字典断言；新增真实 stdio MCP 测试覆盖 discovery、状态变化、权限、请求隔离、未知工具、参数校验、断线、工具错误、畸形结果、快照失败与 Agent Observation 闭环。测试不依赖 DeepSeek API。
+
+仅验证本地 stdio 与当前 DeepSeek 模型；每次任务启动进程有额外开销。没有实现远程 MCP 部署、共享会话、额外工具或 V2 功能。MCP SDK 的传递依赖包括其他传输和遥测 API 包，本项目未启用对应服务或采集功能。

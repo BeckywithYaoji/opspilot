@@ -15,6 +15,6 @@ def verify_goal(query: str, steps: list[Any], environment: dict) -> GoalCompleti
         return GoalCompletionResult(goal_satisfied=False, decision='CONTINUE', unresolved_requirements=['manual intervention or incident ticket is still required'])
     if latest.get('status') in {'open','running'} and len(steps) == 1:
         return GoalCompletionResult(goal_satisfied=True, decision='FINISH')
-    if latest.get('status') == 'success' and environment:
+    if latest.get('status') == 'success':
         return GoalCompletionResult(goal_satisfied=True, decision='FINISH')
     return GoalCompletionResult(goal_satisfied=False, decision='CONTINUE', unresolved_requirements=['the requested outcome is not yet verified'])

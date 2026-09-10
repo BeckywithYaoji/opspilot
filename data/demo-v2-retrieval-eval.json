@@ -1,0 +1,393 @@
+{
+  "cases": 12,
+  "recall@1": 0.6666666666666666,
+  "recall@3": 1.0,
+  "recall@4": 1.0,
+  "details": [
+    {
+      "query": "SSH connection times out on port 22",
+      "expected_sources": [
+        "ssh-troubleshooting.md"
+      ],
+      "results": [
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "SSH Troubleshooting",
+          "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+          "score": 0.7909627700155484
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.614645388686794
+        },
+        {
+          "source": "port-troubleshooting.md",
+          "section": "Port Troubleshooting",
+          "content": "Test DNS, firewall rules, and listener state. Use a TCP connection test from the affected host and verify the expected process owns the port.",
+          "score": 0.560016104370771
+        },
+        {
+          "source": "permission-denied.md",
+          "section": "Permission Denied",
+          "content": "Check file ownership, mode bits, ACLs, and the effective user. Use sudo only when authorized, then retry and record the denied resource.",
+          "score": 0.5319129647574616
+        }
+      ]
+    },
+    {
+      "query": "sshd refuses connections",
+      "expected_sources": [
+        "ssh-troubleshooting.md",
+        "service-recovery.md"
+      ],
+      "results": [
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "SSH Troubleshooting",
+          "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+          "score": 0.6806305358864593
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.6620160137030209
+        },
+        {
+          "source": "permission-denied.md",
+          "section": "Permission Denied",
+          "content": "Check file ownership, mode bits, ACLs, and the effective user. Use sudo only when authorized, then retry and record the denied resource.",
+          "score": 0.5518643063307469
+        },
+        {
+          "source": "port-troubleshooting.md",
+          "section": "Port Troubleshooting",
+          "content": "Test DNS, firewall rules, and listener state. Use a TCP connection test from the affected host and verify the expected process owns the port.",
+          "score": 0.5482500960747966
+        }
+      ]
+    },
+    {
+      "query": "restart a failed systemd service",
+      "expected_sources": [
+        "service-recovery.md"
+      ],
+      "results": [
+        {
+          "source": "service-recovery.md",
+          "section": "Service Recovery",
+          "content": "Check service status and recent logs. Restart the service only after confirming the failure is understood and capture the resulting status.",
+          "score": 0.7329804193900156
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "SSH Troubleshooting",
+          "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+          "score": 0.6120555438588826
+        },
+        {
+          "source": "service-verification.md",
+          "section": "Service Verification",
+          "content": "After recovery, check health endpoints, process status, logs, and a representative request. Record evidence and monitor for recurrence.",
+          "score": 0.59957860141923
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.5931157378414798
+        }
+      ]
+    },
+    {
+      "query": "service is crash looping",
+      "expected_sources": [
+        "service-recovery.md"
+      ],
+      "results": [
+        {
+          "source": "service-recovery.md",
+          "section": "Service Recovery",
+          "content": "Check service status and recent logs. Restart the service only after confirming the failure is understood and capture the resulting status.",
+          "score": 0.6627028121430014
+        },
+        {
+          "source": "incident-escalation.md",
+          "section": "Incident Escalation",
+          "content": "Collect impact, timeline, logs, and attempted mitigations. Escalate to the service owner when customer impact persists or access is unavailable.",
+          "score": 0.5936871957097036
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.5444276841866875
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "SSH Troubleshooting",
+          "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+          "score": 0.5358235115992475
+        }
+      ]
+    },
+    {
+      "query": "port is already in use",
+      "expected_sources": [
+        "port-troubleshooting.md"
+      ],
+      "results": [
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "SSH Troubleshooting",
+          "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+          "score": 0.698967455814204
+        },
+        {
+          "source": "port-troubleshooting.md",
+          "section": "Port Troubleshooting",
+          "content": "Test DNS, firewall rules, and listener state. Use a TCP connection test from the affected host and verify the expected process owns the port.",
+          "score": 0.6278321779178032
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.5659947893214052
+        },
+        {
+          "source": "service-recovery.md",
+          "section": "Service Recovery",
+          "content": "Check service status and recent logs. Restart the service only after confirming the failure is understood and capture the resulting status.",
+          "score": 0.5512911598038326
+        }
+      ]
+    },
+    {
+      "query": "find which process owns port 8080",
+      "expected_sources": [
+        "port-troubleshooting.md"
+      ],
+      "results": [
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "SSH Troubleshooting",
+          "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+          "score": 0.668471659615778
+        },
+        {
+          "source": "permission-denied.md",
+          "section": "Permission Denied",
+          "content": "Check file ownership, mode bits, ACLs, and the effective user. Use sudo only when authorized, then retry and record the denied resource.",
+          "score": 0.6619121983048623
+        },
+        {
+          "source": "port-troubleshooting.md",
+          "section": "Port Troubleshooting",
+          "content": "Test DNS, firewall rules, and listener state. Use a TCP connection test from the affected host and verify the expected process owns the port.",
+          "score": 0.6592304895580452
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.5821177411072691
+        }
+      ]
+    },
+    {
+      "query": "permission denied reading a config file",
+      "expected_sources": [
+        "permission-denied.md"
+      ],
+      "results": [
+        {
+          "source": "permission-denied.md",
+          "section": "Permission Denied",
+          "content": "Check file ownership, mode bits, ACLs, and the effective user. Use sudo only when authorized, then retry and record the denied resource.",
+          "score": 0.684821972911724
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "SSH Troubleshooting",
+          "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+          "score": 0.5697684153332506
+        },
+        {
+          "source": "port-troubleshooting.md",
+          "section": "Port Troubleshooting",
+          "content": "Test DNS, firewall rules, and listener state. Use a TCP connection test from the affected host and verify the expected process owns the port.",
+          "score": 0.4865674282891037
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.4546144229384354
+        }
+      ]
+    },
+    {
+      "query": "check ownership and sudo access",
+      "expected_sources": [
+        "permission-denied.md"
+      ],
+      "results": [
+        {
+          "source": "permission-denied.md",
+          "section": "Permission Denied",
+          "content": "Check file ownership, mode bits, ACLs, and the effective user. Use sudo only when authorized, then retry and record the denied resource.",
+          "score": 0.8317419041667444
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "SSH Troubleshooting",
+          "content": "Check DNS and network reachability, then confirm port 22 is open. Run `ssh -v user@host` and inspect authentication and host key errors.",
+          "score": 0.6752515277145247
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.6186476829554319
+        },
+        {
+          "source": "port-troubleshooting.md",
+          "section": "Port Troubleshooting",
+          "content": "Test DNS, firewall rules, and listener state. Use a TCP connection test from the affected host and verify the expected process owns the port.",
+          "score": 0.6017670362680516
+        }
+      ]
+    },
+    {
+      "query": "when should an incident be escalated",
+      "expected_sources": [
+        "incident-escalation.md"
+      ],
+      "results": [
+        {
+          "source": "incident-escalation.md",
+          "section": "Incident Escalation",
+          "content": "Collect impact, timeline, logs, and attempted mitigations. Escalate to the service owner when customer impact persists or access is unavailable.",
+          "score": 0.6749212453631891
+        },
+        {
+          "source": "service-verification.md",
+          "section": "Service Verification",
+          "content": "After recovery, check health endpoints, process status, logs, and a representative request. Record evidence and monitor for recurrence.",
+          "score": 0.5502458621284875
+        },
+        {
+          "source": "service-recovery.md",
+          "section": "Service Recovery",
+          "content": "Check service status and recent logs. Restart the service only after confirming the failure is understood and capture the resulting status.",
+          "score": 0.536439657630986
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.5341710305933205
+        }
+      ]
+    },
+    {
+      "query": "page the on-call team",
+      "expected_sources": [
+        "incident-escalation.md"
+      ],
+      "results": [
+        {
+          "source": "incident-escalation.md",
+          "section": "Incident Escalation",
+          "content": "Collect impact, timeline, logs, and attempted mitigations. Escalate to the service owner when customer impact persists or access is unavailable.",
+          "score": 0.592664337824643
+        },
+        {
+          "source": "service-recovery.md",
+          "section": "Service Recovery",
+          "content": "Check service status and recent logs. Restart the service only after confirming the failure is understood and capture the resulting status.",
+          "score": 0.5605368089935714
+        },
+        {
+          "source": "service-verification.md",
+          "section": "Service Verification",
+          "content": "After recovery, check health endpoints, process status, logs, and a representative request. Record evidence and monitor for recurrence.",
+          "score": 0.5506668206798235
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.501951013296586
+        }
+      ]
+    },
+    {
+      "query": "verify service health after repair",
+      "expected_sources": [
+        "service-verification.md"
+      ],
+      "results": [
+        {
+          "source": "service-recovery.md",
+          "section": "Service Recovery",
+          "content": "Check service status and recent logs. Restart the service only after confirming the failure is understood and capture the resulting status.",
+          "score": 0.7854990585345418
+        },
+        {
+          "source": "service-verification.md",
+          "section": "Service Verification",
+          "content": "After recovery, check health endpoints, process status, logs, and a representative request. Record evidence and monitor for recurrence.",
+          "score": 0.7318959229920226
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.6171759146439189
+        },
+        {
+          "source": "port-troubleshooting.md",
+          "section": "Port Troubleshooting",
+          "content": "Test DNS, firewall rules, and listener state. Use a TCP connection test from the affected host and verify the expected process owns the port.",
+          "score": 0.6016377291826399
+        }
+      ]
+    },
+    {
+      "query": "run smoke checks after restart",
+      "expected_sources": [
+        "service-verification.md"
+      ],
+      "results": [
+        {
+          "source": "service-recovery.md",
+          "section": "Service Recovery",
+          "content": "Check service status and recent logs. Restart the service only after confirming the failure is understood and capture the resulting status.",
+          "score": 0.7024104466939377
+        },
+        {
+          "source": "ssh-troubleshooting.md",
+          "section": "Verify",
+          "content": "Confirm sshd is running on the server and review recent authentication logs. Escalate after collecting the command output and timestamps.",
+          "score": 0.6375587535142617
+        },
+        {
+          "source": "service-verification.md",
+          "section": "Service Verification",
+          "content": "After recovery, check health endpoints, process status, logs, and a representative request. Record evidence and monitor for recurrence.",
+          "score": 0.6357664690715603
+        },
+        {
+          "source": "permission-denied.md",
+          "section": "Permission Denied",
+          "content": "Check file ownership, mode bits, ACLs, and the effective user. Use sudo only when authorized, then retry and record the denied resource.",
+          "score": 0.6049746133001251
+        }
+      ]
+    }
+  ]
+}

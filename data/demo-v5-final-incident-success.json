@@ -1,0 +1,79 @@
+{
+  "trace_id": "trace-b08efc0e-5e29-4553-98a1-eb6be7f98f7a",
+  "session_id": "61c1c53f-d7f3-4bbb-aa91-fb3565796e27",
+  "memory_loaded": false,
+  "memory_error": null,
+  "incident_memory_error": null,
+  "pending_approval": null,
+  "goal_satisfied_at_step": null,
+  "task_id": "573f5a82-958b-47c9-984d-340dbf982e13",
+  "answer": "模型调用失败或响应无效，请检查 LLM 配置、网络及工具调用兼容性。",
+  "status": "FAILED",
+  "success": false,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": false
+      },
+      "services": {
+        "sshd": "stopped"
+      },
+      "restart_permission": true
+    }
+  },
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "search_incident_memory",
+      "arguments": {
+        "query": "SSH",
+        "top_k": 3
+      },
+      "observation": {
+        "status": "success",
+        "query": "SSH",
+        "results": [
+          {
+            "incident_id": "INC-MEM-74bbc31ca3eb",
+            "summary": "restart_service completed successfully",
+            "resolution_status": "RESOLVED",
+            "source_task_id": "1a274287-5d55-4d1e-9512-f62da9d5e857",
+            "score": 0.6853069283762951
+          },
+          {
+            "incident_id": "INC-MEM-1791852052be",
+            "summary": "restart_service completed successfully",
+            "resolution_status": "RESOLVED",
+            "source_task_id": "87da9afb-9f2f-4717-b226-0748c87866d2",
+            "score": 0.6853069283762951
+          },
+          {
+            "incident_id": "INC-MEM-d636dc7adcce",
+            "summary": "restart_service completed successfully",
+            "resolution_status": "RESOLVED",
+            "source_task_id": "edcb9d04-9b82-4d21-97be-12c862f5bbc2",
+            "score": 0.6853069283762951
+          }
+        ]
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": false,
+      "completion_decision": null,
+      "completion_verifier_error": "completion_verifier_unavailable_or_invalid",
+      "unresolved_requirements": [],
+      "permission_decision": null,
+      "risk_level": null,
+      "approval_id": null
+    }
+  ],
+  "tickets": [],
+  "agent_status": "FAILED",
+  "environment_restored": false,
+  "resolution_status": "FAILED",
+  "handled": false
+}

@@ -1,0 +1,19 @@
+{
+  "Task Count": 153,
+  "Success Rate": 0.5751633986928104,
+  "Average E2E Latency": 1353.4296442422822,
+  "P50 Latency": 0,
+  "P95 Latency": 9.538584854453802,
+  "Average LLM Calls": 1.7581699346405228,
+  "Average Tool Calls": 0.934640522875817,
+  "Runbook Retrieval Calls": 6,
+  "Incident Retrieval Calls": 3,
+  "Approval Required Count": 16,
+  "Approval Rate": 0.10457516339869281,
+  "Approval Resume Success Rate": 0.0718954248366013,
+  "Replay Blocked Count": 8,
+  "Tool Error Rate": 0.22377622377622378,
+  "Retrieval Error Rate": 0.1111111111111111,
+  "Trace Error Rate": 0.5686274509803921,
+  "Trace Coverage": 0.0
+}

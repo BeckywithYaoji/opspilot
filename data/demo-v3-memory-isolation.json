@@ -1,0 +1,42 @@
+{
+  "session_id": "memory-demo-002",
+  "memory_loaded": false,
+  "memory_error": null,
+  "goal_satisfied_at_step": null,
+  "task_id": "08f1e6e8-cb50-45b3-b189-f3d1d2e8f62f",
+  "answer": "抱歉，本次会话没有先前的上下文记录，我无法确定“刚才那台机器”指的是哪一台主机。\n\n请提供以下信息，我就能立即帮你检查 22 端口状态：\n- 主机名或 IP 地址（例如 `web-01` 或 `10.0.0.5`）\n\n补充说明：如果你只是想确认默认 SSH 端口连通性，也请明确目标主机，我不会对未指定的机器做猜测性检查。",
+  "status": "COMPLETED",
+  "success": false,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": false
+      },
+      "services": {
+        "sshd": "stopped"
+      },
+      "restart_permission": true
+    }
+  },
+  "trajectory": [],
+  "tickets": [],
+  "agent_status": "COMPLETED",
+  "environment_restored": false,
+  "resolution_status": "FAILED",
+  "handled": false,
+  "request": {
+    "session_id": "memory-demo-002",
+    "message": "刚才那台机器的 22 端口怎么样？",
+    "scenario": "repairable"
+  },
+  "stored_context": {
+    "entities": {},
+    "last_task": {
+      "status": "COMPLETED",
+      "resolution_status": "FAILED"
+    },
+    "message_count": 2,
+    "ttl": 3600
+  }
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "recall-1",
+    "kind": "recall",
+    "message": "刚才那台机器的 22 端口现在怎么样？",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "recall-2",
+    "kind": "recall",
+    "message": "那个服务器的 22 端口开着吗？",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "recall-3",
+    "kind": "recall",
+    "message": "前面的主机现在 22 端口是否开放？",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "recall-4",
+    "kind": "recall",
+    "message": "刚刚检查的那台主机，查一下 22 端口。",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "recall-5",
+    "kind": "recall",
+    "message": "同一台机器的 22 端口现在通不通？",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "recall-6",
+    "kind": "recall",
+    "message": "请看一下之前服务器的 22 端口状态。",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "recall-7",
+    "kind": "recall",
+    "message": "刚才说的主机，22 端口还开着吗？",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "recall-8",
+    "kind": "recall",
+    "message": "那台服务器现在的 22 端口状态是什么？",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "recall-9",
+    "kind": "recall",
+    "message": "再查一下上述主机的 22 端口。",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "recall-10",
+    "kind": "recall",
+    "message": "对之前那台机器，只检查 22 端口。",
+    "expected_host": "dev-server",
+    "expected_port": 22
+  },
+  {
+    "id": "isolation-1",
+    "kind": "isolation",
+    "message": "刚才那台机器的 22 端口怎么样？"
+  },
+  {
+    "id": "isolation-2",
+    "kind": "isolation",
+    "message": "那个服务器的端口状态怎么样？"
+  }
+]

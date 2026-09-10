@@ -45,15 +45,48 @@ class AgentState(TypedDict):
 
 
 def run_agent(query: str, scenario: str, model: ChatModel, *, max_steps: int = 8,
-              trajectory_path: Path = DEFAULT_PATH) -> RunResponse:
+              trajectory_path: Path = DEFAULT_PATH, session_id: str | None = None, memory_store=None) -> RunResponse:
     if max_steps < 1:
         raise ValueError('max_steps must be positive')
-    return asyncio.run(_run_agent(query, scenario, model, max_steps, trajectory_path))
+    return asyncio.run(_run_with_memory(query, scenario, model, max_steps, trajectory_path, session_id, memory_store))
 
 
-async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunResponse:
+async def _run_with_memory(query, scenario, model, max_steps, trajectory_path, session_id, memory_store):
+    from app.memory.session import SessionMemory, update_memory, render_context
+    memory = SessionMemory()
+    error = None
+    loaded = False
+    sid = session_id or str(uuid4())
+    if memory_store is not None:
+        try:
+            memory = await memory_store.load(sid)
+            loaded = bool(memory.messages or memory.entities)
+        except Exception:
+            error = 'memory_load_failed'
+    context = render_context(memory)
+    try:
+        result = await _run_agent(query, scenario, model, max_steps, trajectory_path, context)
+        result.session_id = sid
+        result.memory_loaded = loaded
+        if memory_store is not None and error is None:
+            try:
+                await memory_store.save(sid, update_memory(memory, query, result, max_messages=getattr(memory_store, 'max_messages', 10)))
+            except Exception:
+                error = 'memory_save_failed'
+        result.memory_error = error
+        save_trajectory(query, scenario, result, trajectory_path)
+        return result
+    finally:
+        if memory_store is not None and hasattr(memory_store, 'aclose'):
+            try:
+                await memory_store.aclose()
+            except Exception:
+                pass
+
+
+async def _run_agent(query, scenario, model, max_steps, trajectory_path, session_context='') -> RunResponse:
     state = {
-        'messages': [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=query)],
+        'messages': [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=session_context), HumanMessage(content=query)],
         'task_id': str(uuid4()), 'step_count': 0, 'max_steps': max_steps,
     'status': 'RUNNING', 'answer': '', 'steps': [], 'latest_environment_snapshot': None, 'goal_satisfied_at_step': None,
     }
@@ -111,7 +144,7 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
                     latest_snapshot = None
                 verdict = None
                 if latest_snapshot is not None:
-                    verdict, error = await asyncio.to_thread(verify_goal, model, completion_context(query, steps, latest_snapshot))
+                    verdict, error = await asyncio.to_thread(verify_goal, model, completion_context(query, steps, latest_snapshot, session_context))
                     steps[-1].completion_verifier_error = error
                     if error is None:
                         steps[-1].completion_decision = verdict.decision
@@ -120,7 +153,7 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
                 else:
                     steps[-1].completion_verifier_error = 'latest_snapshot_unavailable'
                 if verdict is not None and verdict.goal_satisfied:
-                    context = completion_context(query, steps, latest_snapshot)
+                    context = completion_context(query, steps, latest_snapshot, session_context)
                     try:
                         final = await asyncio.to_thread(model.invoke, [SystemMessage(content='The task is complete. Answer the original request using only this evidence. No tools. Include requested information and distinguish recovery from escalation.'), HumanMessage(content=json.dumps(context, ensure_ascii=False))], [])
                         if final.tool_calls or not final.content.strip():
@@ -160,5 +193,4 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
     result = RunResponse(task_id=state['task_id'], answer=state['answer'], status=state['status'],
                          success=snapshot['environment_restored'], environment=snapshot['environment'],
                          trajectory=steps, tickets=snapshot['tickets'], goal_satisfied_at_step=state.get('goal_satisfied_at_step'))
-    save_trajectory(query, scenario, result, trajectory_path)
     return result

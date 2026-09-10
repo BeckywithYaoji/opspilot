@@ -1,0 +1,69 @@
+{
+  "session_id": "memory-demo-001",
+  "memory_loaded": true,
+  "memory_error": null,
+  "goal_satisfied_at_step": 1,
+  "task_id": "30c641a9-37d5-475c-989e-0d2f20fea56a",
+  "answer": "`dev-server` 的 `22` 端口当前状态是：**closed（未开放）**。\n\n补充当前证据：\n- `dev-server`：可达\n- `22` 端口：`closed`\n- `sshd` 服务：`stopped`\n- `environment_restored = false`\n\n恢复与升级区分：\n- 之前会话里曾有“重启 `sshd` 后恢复、22 端口开放”的历史结果，但**当前状态不是已恢复**。\n- 当前 `tickets = []`，**未创建或触发升级工单**。\n- 因此现在应视为：**22 端口关闭、sshd 停止，尚未恢复；但未升级。**",
+  "status": "COMPLETED",
+  "success": false,
+  "environment": {
+    "dev-server": {
+      "reachable": true,
+      "ports": {
+        "22": false
+      },
+      "services": {
+        "sshd": "stopped"
+      },
+      "restart_permission": true
+    }
+  },
+  "trajectory": [
+    {
+      "step": 1,
+      "tool": "check_port",
+      "arguments": {
+        "host": "dev-server",
+        "port": 22
+      },
+      "observation": {
+        "host": "dev-server",
+        "port": 22,
+        "status": "closed"
+      },
+      "transport": "mcp",
+      "repeated": false,
+      "blocked": false,
+      "block_reason": null,
+      "state_revision": 0,
+      "goal_satisfied_after_step": true,
+      "completion_decision": "FINISH",
+      "completion_verifier_error": null,
+      "unresolved_requirements": []
+    }
+  ],
+  "tickets": [],
+  "agent_status": "COMPLETED",
+  "environment_restored": false,
+  "resolution_status": "FAILED",
+  "handled": false,
+  "request": {
+    "session_id": "memory-demo-001",
+    "message": "刚才那台机器的 22 端口现在怎么样？",
+    "scenario": "repairable"
+  },
+  "stored_context": {
+    "entities": {
+      "last_host": "dev-server",
+      "last_port": 22,
+      "last_service": "sshd"
+    },
+    "last_task": {
+      "status": "COMPLETED",
+      "resolution_status": "FAILED"
+    },
+    "message_count": 4,
+    "ttl": 3600
+  }
+}

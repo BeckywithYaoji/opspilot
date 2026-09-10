@@ -10,3 +10,5 @@ mcp==2.2.0
 jsonschema>=4.20,<5
 qdrant-client>=1.12,<2
 sentence-transformers>=3,<6
+
+redis>=5,<7

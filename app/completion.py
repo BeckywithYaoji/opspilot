@@ -21,10 +21,10 @@ class GoalCompletionResult(BaseModel):
         return self
 
 
-def completion_context(query, steps, snapshot):
+def completion_context(query, steps, snapshot, session_context=''):
     def compact(value, limit=6000):
         return json.dumps(value, ensure_ascii=False)[:limit]
-    return {'original_user_query': query,
+    return {'original_user_query': query, 'session_context': session_context,
             'trajectory_summary': [{'tool':s.tool, 'arguments':s.arguments, 'observation':compact(s.observation, 1800)} for s in steps[-8:]],
             'latest_tool_observation': compact(steps[-1].observation),
             'current_environment_snapshot': snapshot,

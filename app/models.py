@@ -11,6 +11,7 @@ class RunRequest(BaseModel):
     model_config = ConfigDict(extra='forbid')
     message: str = Field(min_length=1, max_length=10000)
     scenario: Scenario = 'repairable'
+    session_id: str | None = Field(default=None, min_length=1, max_length=128, pattern=r'^[A-Za-z0-9_-]+$')
 
     @field_validator('message')
     @classmethod
@@ -37,6 +38,9 @@ class TrajectoryStep(BaseModel):
 
 
 class RunResponse(BaseModel):
+    session_id: str | None = None
+    memory_loaded: bool = False
+    memory_error: str | None = None
     goal_satisfied_at_step: int | None = None
     task_id: str
     answer: str

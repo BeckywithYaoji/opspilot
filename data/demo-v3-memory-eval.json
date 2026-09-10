@@ -1,0 +1,9 @@
+{
+  "recall_cases": 10,
+  "correct": 10,
+  "context_recall_accuracy": 1.0,
+  "isolation_cases": 2,
+  "host_calls_without_context": 0,
+  "cross_session_leakage_rate": 0.0,
+  "method": "Real DeepSeek: 10 sessions seeded from the actual two-turn demo memory, 2 fresh sessions; no tool arguments supplied by evaluator."
+}

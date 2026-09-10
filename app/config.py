@@ -83,3 +83,16 @@ class CompatibleChatModel:
                 raise ValueError('tool arguments must be a JSON object')
             calls.append({'id': call['id'], 'name': call['function']['name'], 'args': arguments})
         return AIMessage(content='' if calls else (message.get('content') or ''), tool_calls=calls)
+
+
+class MemorySettings(BaseModel):
+    redis_url: str = ''
+    ttl: int = Field(default=3600, ge=1)
+    max_messages: int = Field(default=10, ge=2, le=100)
+
+    @classmethod
+    def from_env(cls):
+        values={**dotenv_values(ENV_PATH), **os.environ}
+        return cls(redis_url=values.get('REDIS_URL') or '',
+                   ttl=values.get('SESSION_MEMORY_TTL_SECONDS') or 3600,
+                   max_messages=values.get('SESSION_MEMORY_MAX_MESSAGES') or 10)

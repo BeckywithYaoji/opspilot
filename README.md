@@ -373,3 +373,51 @@ Case A 最终 sshd=running、22 端口 open。Case B 只有一次 restart，收�
 限制：Verifier 的语义判断仍可能有误，每个工具增加一次模型调用；信息不足或输出不合法时不会自动判定完成。旧 `resolution_status` 表示环境恢复/升级情况，纯状态检查成功也可能仍是 FAILED，应结合 goal completion 字段解读。离线 Fake 测试证明接口和控制流，真实模型表现以保存的演示为准。
 
 最终真实模型验收（只统计五个 `*-verified.json`）：C 为 1 步 FINISH；D 为 5 步 FINISH / RESOLVED；E 为 6 步 FINISH / ESCALATED；A 为 3 步 RESOLVED；B 为 5 步 ESCALATED。D 无工单，E/B 均实际重启被拒后建单。共 20 次工具调用、3 次检索，平均工具 4.0、平均检索 0.6，重复率和完成后动作率均 0；五例验收及升级正确性均 100%。这是小样本验收，不代表普遍成功率。最终 `pytest -v`：72 passed，1 条上游弃用警告。E 另有一次检索失败但升级成功的记录保存在 `*-attempt2.json`，随后单独复测检索及升级均成功。
+
+## V3.0 Redis Session Memory
+
+相同 `session_id` 的请求会恢复最近会话，用于理解“刚才那台机器”等指代。`POST /api/agent/run` 新增可选 `session_id`，省略时生成 UUID；响应仅增加 `session_id`、`memory_loaded`、`memory_error`，不暴露完整历史。会话内容还会提供给完成验证器，避免丢失当前请求中的指代。
+
+```mermaid
+flowchart TD
+    U[User + session_id] --> API[FastAPI]
+    API --> R[Redis: load session]
+    R --> C[Bounded session context]
+    C --> A[Agent LLM]
+    A --> T[MCP tools + reliability + completion verifier]
+    T --> F[Final response]
+    F --> S[Save messages, entities, last task]
+    S --> R
+```
+
+配置写在 `.env`，未设置 `REDIS_URL` 时禁用存储：
+
+```dotenv
+REDIS_URL=redis://localhost:6379/0
+SESSION_MEMORY_TTL_SECONDS=3600
+SESSION_MEMORY_MAX_MESSAGES=10
+```
+
+本地启动 Redis（仅监听回环地址，本次 Demo 未启用磁盘持久化）：
+
+```bash
+redis-server --bind 127.0.0.1 --port 6379 --save '' --appendonly no
+```
+
+使用异步 redis-py，每个会话保存于 `opspilot:session:{session_id}`，每次写入刷新 TTL。最多保留最近 10 条 user/assistant 消息；单条用户文本最多 10000 字符、回复最多 4000 字符。少量 `last_host`、`last_service`、`last_port` 取自实际执行且未失败/阻断的工具参数，另存最后任务状态；不保存完整 trajectory、原始 runbook 或完整 Observation，不做模型摘要。Memory 只注入上下文，工具名称和参数仍由模型产生。
+
+Redis 读取失败时无历史运行，记录 `memory_load_failed` 并跳过写回，避免覆盖已有会话；写入失败记录 `memory_save_failed`，保留 Agent 结果。Agent 失败时仍保留旧历史和实体。测试主要使用 Fake Store，真实 Redis 集成测试通过显式 `REDIS_TEST_URL` 启用：
+
+```bash
+pytest -v
+REDIS_TEST_URL=redis://localhost:6379/0 pytest tests/test_memory.py -v
+python scripts/eval_memory.py data/demo-v3-memory-eval-runs.json
+```
+
+真实 DeepSeek 两轮 Demo 使用 `memory-demo-001`：第一轮“帮我检查并恢复 dev-server 的 SSH。”成功恢复，Redis 保存 `last_host=dev-server`、`last_service=sshd`、`last_port=22`、2 条消息，TTL 3600。第二轮“刚才那台机器的 22 端口现在怎么样？”未包含主机名，加载 Memory 后只调用 `check_port(host="dev-server", port=22)`；历史增至 4 条消息。新会话 `memory-demo-002` 同样询问“刚才那台机器”，没有调用工具，要求用户指定主机。见 `data/demo-v3-memory-turn1.json`、`data/demo-v3-memory-turn2.json`、`data/demo-v3-memory-isolation.json`。
+
+小型真实模型评估包含 10 条指代变体（独立会话预载实际两轮 Demo 的上下文）和 2 个空会话。Context Recall Accuracy = 10/10，Cross-session Leakage Rate = 0/2。结果见 `data/demo-v3-memory-eval.json`，每次模型实际输出另存 `data/demo-v3-memory-eval-runs.json`；没有向工具参数预填主机。
+
+限制：会话上下文不持久化 Mock Environment，每个请求仍初始化模拟环境，所以第二轮实际端口是 closed；历史修复结果不会代替当前观测。Redis 过期/重启后历史可能不可用。同一 Session 的并发请求目前可能后写覆盖，应按顺序执行。小样本指代评估不代表任意任务准确率；本版不包含长期记忆、认证或跨 Session 检索。
+
+本轮最终验证：`REDIS_TEST_URL=redis://localhost:6379/0 pytest -v` 为 **85 passed, 1 warning**，包含原有 72 项回归；不设置 `REDIS_TEST_URL` 时仅跳过单项真实 Redis 集成测试，普通 Memory 测试使用 Fake Store。

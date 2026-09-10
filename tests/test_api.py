@@ -4,12 +4,14 @@ import pytest
 from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 
-from app.main import app, get_model, get_trajectory_path
+from app.main import app, get_model, get_trajectory_path, get_memory_store
+from tests.test_memory import FakeSessionMemoryStore
 from tests.test_agent import ScriptedModel, call
 
 
 @pytest.fixture
 def client(tmp_path):
+    app.dependency_overrides[get_memory_store] = lambda: FakeSessionMemoryStore()
     app.dependency_overrides[get_model] = lambda: ScriptedModel([
         call('restart_service', {'host': 'dev-server', 'service': 'sshd'}),
         AIMessage(content='操作结束。'),
@@ -40,6 +42,7 @@ def test_api_initializes_independent_scenarios_and_appends_logs(client, tmp_path
 @pytest.mark.parametrize('payload', [
     {'message': ''}, {'message': '   '}, {'message': 'x', 'scenario': 'other'},
     {'message': 'x', 'workflow': 'ssh'},
+    {'message':'x','session_id':''}, {'message':'x','session_id':'bad:key'},
 ])
 def test_invalid_request_rejected(client, payload):
     assert client.post('/api/agent/run', json=payload).status_code == 422

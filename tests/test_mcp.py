@@ -10,7 +10,7 @@ def test_mcp_discovery_port_and_state_mutation():
         async with OpsMCPClient('repairable') as client:
             tools = await client.list_tools()
             assert {t['function']['name'] for t in tools} == {
-                'check_port', 'check_service', 'restart_service', 'create_ticket'
+                'check_port', 'check_service', 'restart_service', 'create_ticket', 'search_runbook'
             }
             port_tool = next(t['function'] for t in tools if t['function']['name'] == 'check_port')
             assert set(port_tool['parameters']['required']) == {'host', 'port'}

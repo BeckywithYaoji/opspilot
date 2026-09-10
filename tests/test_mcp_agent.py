@@ -11,7 +11,7 @@ def test_agent_uses_discovered_mcp_schema_and_observations(tmp_path):
         def invoke(self, messages, tools):
             # The model gets discovered wire schemas, not executable Python tools.
             assert {tool['function']['name'] for tool in tools} == {
-                'check_port', 'check_service', 'restart_service', 'create_ticket'
+                'check_port', 'check_service', 'restart_service', 'create_ticket', 'search_runbook'
             }
             last = messages[-1]
             if last.type == 'human':

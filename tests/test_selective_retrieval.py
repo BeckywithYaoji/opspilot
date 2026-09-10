@@ -33,7 +33,8 @@ def test_runbook_required_task_retrieves_then_calls_ops_tool(tmp_path):
                        trajectory_path=tmp_path / 'runs.jsonl')
     assert [step.tool for step in result.trajectory] == ['search_runbook', 'check_service']
     assert isinstance(model.seen[1][-1], ToolMessage)
-    assert json.loads(model.seen[1][-1].content)['status'] in {'ok', 'error'}
+    # The deterministic test does not require a prebuilt local index.
+    assert json.loads(model.seen[1][-1].content)['status'] in {'ok', 'error', 'failed'}
 
 
 def test_permission_flow_can_retrieve_then_escalate_after_denial(tmp_path):

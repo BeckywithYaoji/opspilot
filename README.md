@@ -264,6 +264,10 @@ python scripts/eval_retrieval.py --index data/qdrant
 
 当前限制：检索只使用本地向量索引，不包含 BM25、混合检索、重排、记忆或自动索引；真实运行需要先建立索引并配置支持工具调用的模型。评估集合较小，Recall 仅用于验证当前手册和查询，不代表生产检索质量。
 
+## 12. V2.1 Agent Reliability
+
+V2.1 在 MCP 调用前增加轻量运行时控制：总工具预算 8 次、检索预算 2 次、同一工具签名在同一 `state_revision` 下最多 2 次。重复签名使用小写、去首尾空白并排序 JSON 参数计算；成功的服务重启会递增状态版本，因此重启后的必要验证不会被误判。运行时只限制预算、标记重复和记录元数据，不选择业务工具或改写 Agent 流程。工具描述和系统提示强调最小充分调用、复用 Observation、完成后停止及仅在无法自动恢复时升级。可靠性指标脚本为 `python scripts/eval_reliability.py data/trajectories.jsonl`。
+
 ## 12. Future Work
 
 后续仅记录、不实现：V3 Redis Memory；V4 Guardrail + HITL；V5 Benchmark。

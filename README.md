@@ -421,3 +421,11 @@ python scripts/eval_memory.py data/demo-v3-memory-eval-runs.json
 限制：会话上下文不持久化 Mock Environment，每个请求仍初始化模拟环境，所以第二轮实际端口是 closed；历史修复结果不会代替当前观测。Redis 过期/重启后历史可能不可用。同一 Session 的并发请求目前可能后写覆盖，应按顺序执行。小样本指代评估不代表任意任务准确率；本版不包含长期记忆、认证或跨 Session 检索。
 
 本轮最终验证：`REDIS_TEST_URL=redis://localhost:6379/0 pytest -v` 为 **85 passed, 1 warning**，包含原有 72 项回归；不设置 `REDIS_TEST_URL` 时仅跳过单项真实 Redis 集成测试，普通 Memory 测试使用 Fake Store。
+
+## V3.1 Incident Memory
+
+Incident Memory 与 Session Memory、Runbook RAG 分工不同：Redis 只保存当前会话上下文，Runbook Qdrant 保存正式规范，Incident Qdrant 保存过去已完成或已升级任务的结构化经验。任务结束后由 `IncidentExtractor` 从工具参数和 Observation 确定性生成 `IncidentRecord`，不 embedding 完整 trajectory；仅 `RESOLVED`/`ESCALATED` 且发生多步诊断或状态改变/建单的任务写入，`source_task_id` 保证幂等。Incident collection 为 `opspilot_incidents`，使用独立本地目录 `data/qdrant-incidents`，避免 Qdrant local 多进程目录锁。
+
+新增 MCP Tool `search_incident_memory(query, top_k=3)` 只搜索历史事件，返回摘要、状态和来源任务 ID。Agent 只有在用户询问类似历史或历史经验有助于诊断时才调用；历史结果必须作为证据，仍需检查当前环境，不能由 Python 自动触发修复。检索和写入失败都作为可降级事件，保留原 Agent 结果。
+
+真实验证：Incident Write 任务生成 `dev-server`/`sshd` 的 RESOLVED 记录；全新 Session 的 `staging-server` 查询调用 `search_incident_memory` 并检索到历史来源，同时检查当前 `staging-server`，发现 unknown host 后升级；简单端口查询没有 Incident 检索。见 `data/demo-v3.1-incident-write.json`、`data/demo-v3.1-cross-session.json`、`data/demo-v3.1-selective.json`。评估脚本为 `python scripts/eval_incident_memory.py`，当前小数据集的决策准确率与 Recall@1/3 均为 1.0，无必要检索率为 0.0。

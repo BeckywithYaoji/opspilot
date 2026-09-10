@@ -1,0 +1,7 @@
+{
+  "cases": 10,
+  "incident_retrieval_decision_accuracy": 1.0,
+  "unnecessary_incident_retrieval_rate": 0.0,
+  "incident_recall@1": 1.0,
+  "incident_recall@3": 1.0
+}

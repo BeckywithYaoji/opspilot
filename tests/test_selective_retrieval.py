@@ -20,7 +20,7 @@ def test_runbook_required_task_retrieves_then_calls_ops_tool(tmp_path):
     class SchemaCheckingModel(ScriptedModel):
         def invoke(self, messages, tools):
             assert {tool['function']['name'] for tool in tools} == {
-                'check_port', 'check_service', 'restart_service', 'create_ticket', 'search_runbook'
+                    'check_port', 'check_service', 'restart_service', 'create_ticket', 'search_runbook', 'search_incident_memory'
             }
             return super().invoke(messages, tools)
 

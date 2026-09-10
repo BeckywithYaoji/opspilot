@@ -5,6 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from app.agent import run_agent
 from app.config import CompatibleChatModel, MemorySettings
 from app.memory.session import RedisSessionMemoryStore
+from app.memory.incident import IncidentMemoryStore, IncidentExtractor
 from app.models import RunRequest, RunResponse
 from app.trajectory import DEFAULT_PATH
 
@@ -24,6 +25,11 @@ def get_memory_store():
     settings = MemorySettings.from_env()
     return RedisSessionMemoryStore.from_settings(settings) if settings.redis_url else None
 
+def get_incident_store():
+    # Local Qdrant uses a process lock per storage directory; incidents have
+    # their own directory while remaining on the same Qdrant implementation.
+    return IncidentMemoryStore('data/qdrant-incidents')
+
 
 @app.get('/health')
 def health() -> dict:
@@ -31,8 +37,14 @@ def health() -> dict:
 
 
 @app.post('/api/agent/run', response_model=RunResponse)
-def run(request: RunRequest, model=Depends(get_model), path: Path = Depends(get_trajectory_path), memory_store=Depends(get_memory_store)) -> RunResponse:
+def run(request: RunRequest, model=Depends(get_model), path: Path = Depends(get_trajectory_path), memory_store=Depends(get_memory_store), incident_store=Depends(get_incident_store)) -> RunResponse:
     try:
-        return run_agent(request.message, request.scenario, model, trajectory_path=path, session_id=request.session_id, memory_store=memory_store)
+        result = run_agent(request.message, request.scenario, model, trajectory_path=path, session_id=request.session_id, memory_store=memory_store)
+        try:
+            record = IncidentExtractor.extract(request.message, result)
+            if record is not None: incident_store.save(record)
+        except Exception:
+            result.incident_memory_error = 'incident_memory_write_failed'
+        return result
     except OSError:
         raise HTTPException(status_code=500, detail='Unable to save trajectory') from None

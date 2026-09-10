@@ -9,12 +9,14 @@ from pydantic import Field
 
 from app.environment import MockEnvironment
 from app.rag.retriever import RunbookRetriever
+from app.memory.incident import IncidentMemoryStore
 from app.tools import build_tools
 
 
 def create_server(scenario: str, index_path: str | Path = 'data/qdrant') -> MCPServer:
     environment = MockEnvironment(scenario)
     retriever = RunbookRetriever(index_path)
+    incidents = IncidentMemoryStore('data/qdrant-incidents')
     server = MCPServer('ops-mcp-server', log_level='ERROR')
     for tool in build_tools(environment).values():
         server.add_tool(tool.func, name=tool.name, description=tool.description,
@@ -26,6 +28,13 @@ def create_server(scenario: str, index_path: str | Path = 'data/qdrant') -> MCPS
         return retriever.search(query, top_k)
     server.add_tool(search_runbook, name='search_runbook',
                     description=search_runbook.__doc__, structured_output=True)
+
+    def search_incident_memory(query: Annotated[str, Field(min_length=1)],
+                               top_k: Annotated[int, Field(ge=1, le=20)] = 3) -> dict[str, Any]:
+        """Search previous operational incidents and observed resolutions. Historical evidence must be verified against the current environment."""
+        return incidents.search(query, top_k)
+    server.add_tool(search_incident_memory, name='search_incident_memory',
+                    description=search_incident_memory.__doc__, structured_output=True)
 
     @server.resource('ops://environment', mime_type='application/json')
     def snapshot() -> str:

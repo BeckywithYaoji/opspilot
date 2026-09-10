@@ -41,6 +41,7 @@ class RunResponse(BaseModel):
     session_id: str | None = None
     memory_loaded: bool = False
     memory_error: str | None = None
+    incident_memory_error: str | None = None
     goal_satisfied_at_step: int | None = None
     task_id: str
     answer: str

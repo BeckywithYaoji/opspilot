@@ -1,0 +1,59 @@
+{
+  "request": {
+    "session_id": "v31-simple-e7773a57ff814bfcbfb54d7dedb4d7ac",
+    "message": "检查一下 dev-server 的 22 端口。",
+    "scenario": "repairable"
+  },
+  "response": {
+    "session_id": "v31-simple-e7773a57ff814bfcbfb54d7dedb4d7ac",
+    "memory_loaded": false,
+    "memory_error": null,
+    "incident_memory_error": null,
+    "goal_satisfied_at_step": 1,
+    "task_id": "e804dd02-edc2-4112-a25f-e3cd000c6ebb",
+    "answer": "已检查 `dev-server` 的 22 端口：\n\n- **端口状态**：`closed`（关闭）\n- **主机可达性**：`reachable: true`，即 dev-server 本身可达\n- **关联服务**：`sshd` 当前为 `stopped`\n- **恢复权限**：`restart_permission: true`\n- **环境是否已恢复**：`false`，即尚未执行恢复\n- **现有工单**：无\n\n**判断**：22 端口关闭与 `sshd` 服务停止一致，不是主机不可达导致的。由于有重启权限，这属于可本地恢复的问题。\n\n**恢复 vs 升级**：\n- **恢复**：在 `dev-server` 上重启 `sshd`，然后重新检查 22 端口。\n- **升级**：如果重启后 22 端口仍为 `closed`，或 `sshd` 无法正常启动/再次停止，再升级处理。当前无需立即开工单。",
+    "status": "COMPLETED",
+    "success": false,
+    "environment": {
+      "dev-server": {
+        "reachable": true,
+        "ports": {
+          "22": false
+        },
+        "services": {
+          "sshd": "stopped"
+        },
+        "restart_permission": true
+      }
+    },
+    "trajectory": [
+      {
+        "step": 1,
+        "tool": "check_port",
+        "arguments": {
+          "host": "dev-server",
+          "port": 22
+        },
+        "observation": {
+          "host": "dev-server",
+          "port": 22,
+          "status": "closed"
+        },
+        "transport": "mcp",
+        "repeated": false,
+        "blocked": false,
+        "block_reason": null,
+        "state_revision": 0,
+        "goal_satisfied_after_step": true,
+        "completion_decision": "FINISH",
+        "completion_verifier_error": null,
+        "unresolved_requirements": []
+      }
+    ],
+    "tickets": [],
+    "agent_status": "COMPLETED",
+    "environment_restored": false,
+    "resolution_status": "FAILED",
+    "handled": false
+  }
+}

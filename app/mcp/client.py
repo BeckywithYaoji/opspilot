@@ -74,7 +74,7 @@ class OpsMCPClient:
                 validate(arguments, definition['parameters'])
             except ValidationError:
                 return {'status': 'failed', 'error': 'invalid tool arguments'}
-            result = await self.client.call_tool(name, arguments, read_timeout_seconds=60 if name == 'search_runbook' else 5)
+            result = await self.client.call_tool(name, arguments, read_timeout_seconds=60 if name in {'search_runbook', 'search_incident_memory'} else 5)
         except Exception:
             return {'status': 'failed', 'error': 'MCP server unavailable'}
         observation = self.observation(result)

@@ -1,0 +1,12 @@
+[
+  {"id":"similar-ssh-1","expected":"relevant","retrieved":true},
+  {"id":"similar-ssh-2","expected":"relevant","retrieved":true},
+  {"id":"similar-service-1","expected":"relevant","retrieved":true},
+  {"id":"similar-service-2","expected":"relevant","retrieved":true},
+  {"id":"similar-recovery-1","expected":"relevant","retrieved":true},
+  {"id":"simple-port-1","expected":"irrelevant","retrieved":false},
+  {"id":"simple-port-2","expected":"irrelevant","retrieved":false},
+  {"id":"current-status-1","expected":"irrelevant","retrieved":false},
+  {"id":"current-status-2","expected":"irrelevant","retrieved":false},
+  {"id":"direct-check-1","expected":"irrelevant","retrieved":false}
+]

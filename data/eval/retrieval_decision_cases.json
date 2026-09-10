@@ -1,0 +1,14 @@
+[
+  {"id":"simple-port","message":"Check whether port 8080 is open","should_retrieve":false},
+  {"id":"restart-known-service","message":"Restart nginx on dev-server","should_retrieve":false},
+  {"id":"ssh-timeout","message":"SSH times out; diagnose and fix it","should_retrieve":true},
+  {"id":"ssh-refused","message":"sshd refuses all connections","should_retrieve":true},
+  {"id":"service-crash","message":"Investigate a crash-looping service","should_retrieve":true},
+  {"id":"port-conflict","message":"Find why port 8080 is already in use","should_retrieve":true},
+  {"id":"read-config","message":"Permission denied reading the deployment config","should_retrieve":true},
+  {"id":"sudo-denied","message":"User cannot sudo to inspect the service","should_retrieve":true},
+  {"id":"escalate","message":"Decide when to escalate this incident","should_retrieve":true},
+  {"id":"verify","message":"Verify the service after repair","should_retrieve":true},
+  {"id":"health","message":"Run the standard health check","should_retrieve":false},
+  {"id":"status","message":"Show current service status","should_retrieve":false}
+]

@@ -1,0 +1,14 @@
+[
+  {"query": "SSH connection times out on port 22", "expected_sources": ["ssh-troubleshooting.md"]},
+  {"query": "sshd refuses connections", "expected_sources": ["ssh-troubleshooting.md", "service-recovery.md"]},
+  {"query": "restart a failed systemd service", "expected_sources": ["service-recovery.md"]},
+  {"query": "service is crash looping", "expected_sources": ["service-recovery.md"]},
+  {"query": "port is already in use", "expected_sources": ["port-troubleshooting.md"]},
+  {"query": "find which process owns port 8080", "expected_sources": ["port-troubleshooting.md"]},
+  {"query": "permission denied reading a config file", "expected_sources": ["permission-denied.md"]},
+  {"query": "check ownership and sudo access", "expected_sources": ["permission-denied.md"]},
+  {"query": "when should an incident be escalated", "expected_sources": ["incident-escalation.md"]},
+  {"query": "page the on-call team", "expected_sources": ["incident-escalation.md"]},
+  {"query": "verify service health after repair", "expected_sources": ["service-verification.md"]},
+  {"query": "run smoke checks after restart", "expected_sources": ["service-verification.md"]}
+]

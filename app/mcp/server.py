@@ -2,7 +2,7 @@
 import argparse
 import json
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Any
 
 from mcp.server import MCPServer
 from pydantic import Field
@@ -21,7 +21,7 @@ def create_server(scenario: str, index_path: str | Path = 'data/qdrant') -> MCPS
                         structured_output=True)
 
     def search_runbook(query: Annotated[str, Field(min_length=1)],
-                       top_k: Annotated[int, Field(ge=1, le=20)] = 4) -> dict:
+                       top_k: Annotated[int, Field(ge=1, le=20)] = 4) -> dict[str, Any]:
         """Search the locally indexed operations runbooks for relevant guidance."""
         return retriever.search(query, top_k)
     server.add_tool(search_runbook, name='search_runbook',

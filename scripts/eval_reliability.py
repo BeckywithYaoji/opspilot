@@ -8,11 +8,13 @@ def evaluate(path: str) -> dict:
     total = len(calls)
     repeated = sum(bool(s.get('repeated')) for s in calls)
     blocked = sum(bool(s.get('blocked')) for s in calls)
-    post = sum(bool(s.get('post_resolution_action')) for s in calls)
+    goal_steps = {id(r): next((s.get('step') for s in r.get('steps', []) if s.get('goal_satisfied_after_step')), None) for r in rows}
+    post = sum(1 for r in rows for s in r.get('steps', []) if goal_steps[id(r)] is not None and s.get('step', 0) > goal_steps[id(r)])
     return {'tasks': len(rows), 'total_tool_calls': total, 'retrieval_calls': sum(s.get('tool') == 'search_runbook' for s in calls),
             'repeated_tool_calls': repeated, 'blocked_tool_calls': blocked, 'post_resolution_actions': post,
             'average_tool_calls': total / len(rows) if rows else 0, 'repeated_tool_rate': repeated / total if total else 0,
             'post_resolution_action_rate': post / total if total else 0,
+            'goal_completion_steps': [v for v in goal_steps.values() if v is not None],
             'task_completion_rate': sum(r.get('status') == 'COMPLETED' for r in rows) / len(rows) if rows else 0}
 
 if __name__ == '__main__':

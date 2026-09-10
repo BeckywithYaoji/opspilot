@@ -35,7 +35,8 @@ def test_search_runbook_result_is_structured():
                 },
             },
         }]
-        async def call_tool(name, arguments):
+        async def call_tool(name, arguments, read_timeout_seconds=None):
+            assert read_timeout_seconds == 60
             return _Result()
         client.client.call_tool = call_tool
         assert await client.call_tool('search_runbook', {'query': 'ssh', 'top_k': 3}) == {
@@ -77,7 +78,8 @@ def test_search_runbook_unavailable_index_is_safe_error():
             is_error = False
             structured_content = {'status': 'error', 'query': 'ssh', 'results': [], 'error': 'missing'}
             content = []
-        async def call_tool(name, arguments):
+        async def call_tool(name, arguments, read_timeout_seconds=None):
+            assert read_timeout_seconds == 60
             return Failed()
         client.client.call_tool = call_tool
         assert await client.call_tool('search_runbook', {'query': 'ssh'}) == {

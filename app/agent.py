@@ -13,7 +13,7 @@ from app.models import RunResponse, Status, TrajectoryStep
 from app.mcp.client import OpsMCPClient
 from app.trajectory import DEFAULT_PATH, save_trajectory
 from app.reliability import ReliabilityRuntime
-from app.completion import verify_goal
+from app.completion import verify_goal, completion_context
 
 
 SYSTEM_PROMPT = """你是 IT Operations Agent，处理模拟服务器的运维任务。
@@ -40,6 +40,8 @@ class AgentState(TypedDict):
     status: Status
     answer: str
     steps: list[TrajectoryStep]
+    latest_environment_snapshot: dict | None
+    goal_satisfied_at_step: int | None
 
 
 def run_agent(query: str, scenario: str, model: ChatModel, *, max_steps: int = 8,
@@ -53,12 +55,11 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
     state = {
         'messages': [SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=query)],
         'task_id': str(uuid4()), 'step_count': 0, 'max_steps': max_steps,
-    'status': 'RUNNING', 'answer': '', 'steps': [],
+    'status': 'RUNNING', 'answer': '', 'steps': [], 'latest_environment_snapshot': None, 'goal_satisfied_at_step': None,
     }
     # Keep executed steps even if the MCP connection fails before the graph returns.
     steps: list[TrajectoryStep] = []
     runtime = ReliabilityRuntime(max_total_tool_calls=max_steps)
-    goal_satisfied_at_step = None
     snapshot = {'environment': {}, 'environment_restored': False, 'tickets': []}
     latest_snapshot = snapshot
 
@@ -85,6 +86,7 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
             return {'status': 'FAILED', 'answer': '模型调用失败或响应无效，请检查 LLM 配置、网络及工具调用兼容性。'}
 
     async def tool_node(state: AgentState) -> dict:
+        nonlocal latest_snapshot
         messages = []
         count = state['step_count']
         for call in state['messages'][-1].tool_calls:
@@ -103,23 +105,37 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
                 count += 1
                 steps.append(TrajectoryStep(step=count, tool=call['name'], arguments=call['args'], observation=observation,
                                             transport='mcp', repeated=decision.get('repeated', False), state_revision=runtime.state_revision))
-                # Completion checks are most useful for explicit verification requests;
-                # preserve ordinary repair loops for callers that still need a final model response.
+                try:
+                    latest_snapshot = await client.snapshot()
+                except Exception:
+                    latest_snapshot = None
                 verdict = None
-                if ('顺便' in query or '规范' in query or '端口' in query):
-                    try:
-                        latest_snapshot = await client.snapshot()
-                    except Exception:
-                        latest_snapshot = snapshot
-                    verdict = verify_goal(query, steps, latest_snapshot['environment'])
-                if verdict is not None:
+                if latest_snapshot is not None:
+                    verdict, error = await asyncio.to_thread(verify_goal, model, completion_context(query, steps, latest_snapshot))
+                    steps[-1].completion_verifier_error = error
+                    if error is None:
+                        steps[-1].completion_decision = verdict.decision
+                        steps[-1].unresolved_requirements = verdict.unresolved_requirements
                     steps[-1].goal_satisfied_after_step = verdict.goal_satisfied
-                if verdict is not None and verdict.goal_satisfied and goal_satisfied_at_step is None:
-                    goal_satisfied_at_step = count
-                    return {'messages': messages, 'steps': steps, 'step_count': count, 'status': 'COMPLETED', 'answer': '已完成并验证用户请求。'}
-            messages.append(ToolMessage(content=json.dumps(observation, ensure_ascii=False),
+                else:
+                    steps[-1].completion_verifier_error = 'latest_snapshot_unavailable'
+                if verdict is not None and verdict.goal_satisfied:
+                    context = completion_context(query, steps, latest_snapshot)
+                    try:
+                        final = await asyncio.to_thread(model.invoke, [SystemMessage(content='The task is complete. Answer the original request using only this evidence. No tools. Include requested information and distinguish recovery from escalation.'), HumanMessage(content=json.dumps(context, ensure_ascii=False))], [])
+                        if final.tool_calls or not final.content.strip():
+                            raise ValueError('invalid final response')
+                        answer = final.content
+                    except Exception:
+                        answer = '任务已由完成验证器确认完成。已记录的结果：' + json.dumps(latest_snapshot, ensure_ascii=False)
+                    return {'messages': messages, 'steps': steps, 'step_count': count, 'status': 'COMPLETED', 'answer': answer,
+                            'latest_environment_snapshot': latest_snapshot, 'goal_satisfied_at_step': count}
+            feedback = dict(observation)
+            if steps[-1].completion_decision is not None:
+                feedback['completion'] = {'decision': steps[-1].completion_decision, 'unresolved_requirements': steps[-1].unresolved_requirements}
+            messages.append(ToolMessage(content=json.dumps(feedback, ensure_ascii=False),
                                         tool_call_id=call['id'], name=call['name']))
-        return {'messages': messages, 'steps': steps, 'step_count': count}
+        return {'messages': messages, 'steps': steps, 'step_count': count, 'latest_environment_snapshot': latest_snapshot}
 
     try:
         async with OpsMCPClient(scenario) as client:
@@ -133,18 +149,16 @@ async def _run_agent(query, scenario, model, max_steps, trajectory_path) -> RunR
             graph.add_conditional_edges('llm', lambda state: 'tools' if state['status'] == 'RUNNING' else END)
             graph.add_conditional_edges('tools', lambda state: 'llm' if state['status'] == 'RUNNING' else END)
             state = await graph.compile().ainvoke(state, config={'recursion_limit': 2 * max_steps + 4})
-            try:
+            snapshot = state.get('latest_environment_snapshot')
+            if snapshot is None:
                 snapshot = await client.snapshot()
-            except Exception:
-                snapshot = latest_snapshot
-                if not snapshot.get('environment'):
-                    state['status'] = 'FAILED'
     except Exception:
         state['status'] = 'FAILED'
         state['answer'] = 'MCP runtime failed: server, discovery or environment snapshot unavailable.'
 
+    snapshot = snapshot or {'environment': {}, 'environment_restored': False, 'tickets': []}
     result = RunResponse(task_id=state['task_id'], answer=state['answer'], status=state['status'],
                          success=snapshot['environment_restored'], environment=snapshot['environment'],
-                         trajectory=steps, tickets=snapshot['tickets'])
+                         trajectory=steps, tickets=snapshot['tickets'], goal_satisfied_at_step=state.get('goal_satisfied_at_step'))
     save_trajectory(query, scenario, result, trajectory_path)
     return result

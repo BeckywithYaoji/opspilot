@@ -43,6 +43,7 @@ def test_model_can_choose_service_first_and_observations_return_to_model(tmp_pat
     assert saved['total_steps'] == 3
     assert saved['steps'][0] == {
         'step': 1, 'tool': 'check_service', 'transport': 'mcp',
+        'completion_verifier_error': 'completion_verifier_unavailable_or_invalid',
         'arguments': {'host': 'dev-server', 'service': 'sshd'},
         'observation': {'host': 'dev-server', 'service': 'sshd', 'status': 'stopped'},
     }

@@ -1,0 +1,98 @@
+{
+  "tasks": 5,
+  "total_tool_calls": 20,
+  "retrieval_calls": 3,
+  "repeated_tool_calls": 0,
+  "blocked_tool_calls": 0,
+  "post_resolution_actions": 0,
+  "average_tool_calls": 4.0,
+  "repeated_tool_rate": 0.0,
+  "post_resolution_action_rate": 0.0,
+  "goal_completion_steps": [
+    1,
+    5,
+    6,
+    3,
+    5
+  ],
+  "task_completion_rate": 1.0,
+  "cases": {
+    "simple-port": {
+      "task_id": "61c34d88-d2ee-4152-ad03-f2f6ee12a242",
+      "pass": true,
+      "tools": [
+        "check_port"
+      ],
+      "goal_completion_step": 1,
+      "post_resolution_actions": 0,
+      "resolution": "FAILED",
+      "retrieval_calls": 0,
+      "restart_attempts": 0
+    },
+    "rag-repair": {
+      "task_id": "cdf51b40-6e2a-4477-9015-06b2593bbbf9",
+      "pass": true,
+      "tools": [
+        "search_runbook",
+        "check_service",
+        "check_service",
+        "check_port",
+        "restart_service"
+      ],
+      "goal_completion_step": 5,
+      "post_resolution_actions": 0,
+      "resolution": "RESOLVED",
+      "retrieval_calls": 1,
+      "restart_attempts": 1
+    },
+    "escalation": {
+      "task_id": "4427fd7a-4460-4d53-9608-0ae8bdd13f56",
+      "pass": true,
+      "tools": [
+        "search_runbook",
+        "check_port",
+        "check_service",
+        "check_service",
+        "restart_service",
+        "create_ticket"
+      ],
+      "goal_completion_step": 6,
+      "post_resolution_actions": 0,
+      "resolution": "ESCALATED",
+      "retrieval_calls": 1,
+      "restart_attempts": 1
+    },
+    "reg-a": {
+      "task_id": "65bb9746-f2b7-4eac-a38f-029ca48ebaed",
+      "pass": true,
+      "tools": [
+        "check_port",
+        "check_service",
+        "restart_service"
+      ],
+      "goal_completion_step": 3,
+      "post_resolution_actions": 0,
+      "resolution": "RESOLVED",
+      "retrieval_calls": 0,
+      "restart_attempts": 1
+    },
+    "reg-b": {
+      "task_id": "7111d1cc-fcf6-40d6-86f5-45f3b5626574",
+      "pass": true,
+      "tools": [
+        "check_port",
+        "check_service",
+        "search_runbook",
+        "restart_service",
+        "create_ticket"
+      ],
+      "goal_completion_step": 5,
+      "post_resolution_actions": 0,
+      "resolution": "ESCALATED",
+      "retrieval_calls": 1,
+      "restart_attempts": 1
+    }
+  },
+  "average_retrieval_calls": 0.6,
+  "escalation_correctness": 1.0
+}

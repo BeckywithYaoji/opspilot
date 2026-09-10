@@ -361,3 +361,15 @@ Case A 最终 sshd=running、22 端口 open。Case B 只有一次 restart，收�
 实际运行 `pytest -v`：**40 passed，1 条原有上游弃用警告**。原 25 个测试保留，仅为新增 transport 字段调整一处完整字典断言；新增真实 stdio MCP 测试覆盖 discovery、状态变化、权限、请求隔离、未知工具、参数校验、断线、工具错误、畸形结果、快照失败与 Agent Observation 闭环。测试不依赖 DeepSeek API。
 
 仅验证本地 stdio 与当前 DeepSeek 模型；每次任务启动进程有额外开销。没有实现远程 MCP 部署、共享会话、额外工具或 V2 功能。MCP SDK 的传递依赖包括其他传输和遥测 API 包，本项目未启用对应服务或采集功能。
+
+## V2.1.3 Generic Goal Completion
+
+预算只能限制调用数量，不能判断用户目标是否满足。现在每次执行工具后，在 MCP 会话内读取最新环境快照，再将原始请求、有限的轨迹摘要、最新 Observation 和检索证据交给同一配置的模型。Verifier 使用 JSON mode 输出，并经严格 Pydantic schema 校验；只能返回 CONTINUE/FINISH，不选择工具。失败时保守 CONTINUE，记录安全错误码。Agent 收到未完成要求后继续自主选择工具；FINISH 立即取消剩余工具提议，用无工具调用生成最终答复。
+
+本轮复现的实际异常是 `tool_node` 中读取尚未赋值的局部 `goal_satisfied_at_step` 所引发的 `UnboundLocalError`，不是已证实的 MCP session 提前关闭。旧 `latest_snapshot` 还遮蔽了外层同名变量。现在完成步骤和最新快照写入 Graph state，最终响应直接使用已获取快照，完成后不再额外读取。测试覆盖最新状态、批量调用中途 FINISH、无额外 snapshot、非运维信息查询及 verifier 异常。删除了查询关键词路由和工具成功即完成的本地规则。
+
+每步记录 `completion_decision`、`unresolved_requirements`、`goal_satisfied_after_step`；响应记录 `goal_satisfied_at_step`。完成点后的任何工具计入 post-resolution actions。原始失败演示保留，`*-attempt1.json` 为本轮提示调整前的真实运行，`*-verified.json` 为最终提示运行。检索冷启动实测超过原 5 秒预算，因此仅现有检索调用使用 60 秒 MCP 读取超时。
+
+限制：Verifier 的语义判断仍可能有误，每个工具增加一次模型调用；信息不足或输出不合法时不会自动判定完成。旧 `resolution_status` 表示环境恢复/升级情况，纯状态检查成功也可能仍是 FAILED，应结合 goal completion 字段解读。离线 Fake 测试证明接口和控制流，真实模型表现以保存的演示为准。
+
+最终真实模型验收（只统计五个 `*-verified.json`）：C 为 1 步 FINISH；D 为 5 步 FINISH / RESOLVED；E 为 6 步 FINISH / ESCALATED；A 为 3 步 RESOLVED；B 为 5 步 ESCALATED。D 无工单，E/B 均实际重启被拒后建单。共 20 次工具调用、3 次检索，平均工具 4.0、平均检索 0.6，重复率和完成后动作率均 0；五例验收及升级正确性均 100%。这是小样本验收，不代表普遍成功率。最终 `pytest -v`：72 passed，1 条上游弃用警告。E 另有一次检索失败但升级成功的记录保存在 `*-attempt2.json`，随后单独复测检索及升级均成功。

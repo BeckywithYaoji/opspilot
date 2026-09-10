@@ -77,3 +77,17 @@ def test_bare_dotenv_key_is_reported_as_missing(monkeypatch, tmp_path):
     env.write_text('LLM_API_KEY\nLLM_BASE_URL=https://example.test\nLLM_MODEL=any\n')
     with pytest.raises(ValueError, match='LLM_API_KEY'):
         Settings.from_env(env)
+
+
+def test_structured_verifier_uses_same_provider_json_mode():
+    from app.completion import GoalCompletionResult
+    result={'goal_satisfied':True,'decision':'FINISH','unresolved_requirements':[]}
+    captured={}
+    def transport(request,timeout):
+        captured.update(json.loads(request.data))
+        return HTTPReply({'choices':[{'message':{'content':json.dumps(result)}}]})
+    model=CompatibleChatModel(Settings(api_key='test',base_url='https://example.test',model='same'))
+    with patch('app.config.urlopen',transport):
+        assert model.invoke_structured([SystemMessage(content='verify')],GoalCompletionResult)==result
+    assert captured['response_format']=={'type':'json_object'}
+    assert captured['model']=='same' and 'tools' not in captured

@@ -31,9 +31,13 @@ class TrajectoryStep(BaseModel):
     block_reason: str | None = None
     state_revision: int = 0
     goal_satisfied_after_step: bool = False
+    completion_decision: str | None = None
+    completion_verifier_error: str | None = None
+    unresolved_requirements: list[str] = Field(default_factory=list)
 
 
 class RunResponse(BaseModel):
+    goal_satisfied_at_step: int | None = None
     task_id: str
     answer: str
     status: Status

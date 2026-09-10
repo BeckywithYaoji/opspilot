@@ -32,7 +32,11 @@ class CompatibleChatModel:
     def __init__(self, settings: Settings | None = None):
         self.settings = settings
 
-    def invoke(self, messages: list, tools: list) -> AIMessage:
+    def invoke_structured(self, messages, schema):
+        reply = self.invoke(messages, [], response_schema=schema)
+        return schema.model_validate_json(reply.content).model_dump()
+
+    def invoke(self, messages: list, tools: list, *, response_schema=None) -> AIMessage:
         settings = self.settings or Settings.from_env()
         wire_messages = []
         for message in messages:
@@ -56,6 +60,12 @@ class CompatibleChatModel:
         payload = {'model': settings.model, 'messages': wire_messages,
                    'tools': [convert_to_openai_tool(tool) for tool in tools],
                    'tool_choice': 'auto', 'stream': False}
+        if not tools:
+            payload.pop('tools')
+            payload.pop('tool_choice')
+        if response_schema is not None:
+            payload['response_format'] = {'type': 'json_object'}
+            payload['messages'][0]['content'] += '\nJSON schema: ' + json.dumps(response_schema.model_json_schema())
         request = Request(settings.base_url.rstrip('/') + '/chat/completions',
                           data=json.dumps(payload, ensure_ascii=False).encode('utf-8'),
                           headers={'Authorization': 'Bearer ' + settings.api_key.get_secret_value(),

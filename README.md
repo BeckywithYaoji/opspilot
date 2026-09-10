@@ -89,23 +89,143 @@ curl -sS http://127.0.0.1:8000/api/agent/run \
 
 ## 8. Case A 实际 trajectory
 
-2026-09-10 已实际启动 Uvicorn 并通过 HTTP 调用；当时 API 密钥未配置，验收 **未通过**，不是成功 Demo：
+2026-09-10，使用本地配置的 `deepseek-flash`，通过运行中的 FastAPI 实际调用。通过：最终 `sshd=running`、22 端口 open，`COMPLETED / success=true`。
+
+Task ID：`510c6abe-93e4-40af-80eb-c9ff6faac46b`。以下为实际执行记录，不是预设路径：
 
 ```json
-{"task_id":"caabcaad-077f-413f-ba69-cf8356826cf3","status":"FAILED","success":false,"trajectory":[]}
+[
+  {
+    "step": 1,
+    "tool": "check_port",
+    "arguments": {
+      "host": "dev-server",
+      "port": 22
+    },
+    "observation": {
+      "host": "dev-server",
+      "port": 22,
+      "status": "closed"
+    }
+  },
+  {
+    "step": 2,
+    "tool": "check_service",
+    "arguments": {
+      "host": "dev-server",
+      "service": "sshd"
+    },
+    "observation": {
+      "host": "dev-server",
+      "service": "sshd",
+      "status": "stopped"
+    }
+  },
+  {
+    "step": 3,
+    "tool": "restart_service",
+    "arguments": {
+      "host": "dev-server",
+      "service": "sshd"
+    },
+    "observation": {
+      "status": "success",
+      "message": "sshd restarted successfully"
+    }
+  },
+  {
+    "step": 4,
+    "tool": "check_service",
+    "arguments": {
+      "host": "dev-server",
+      "service": "sshd"
+    },
+    "observation": {
+      "host": "dev-server",
+      "service": "sshd",
+      "status": "running"
+    }
+  },
+  {
+    "step": 5,
+    "tool": "check_port",
+    "arguments": {
+      "host": "dev-server",
+      "port": 22
+    },
+    "observation": {
+      "host": "dev-server",
+      "port": 22,
+      "status": "open"
+    }
+  }
+]
 ```
 
-最终环境：`sshd=stopped`，`port 22=closed`。需要补齐密钥后实际重跑，不能用离线 Fake 路径替代真实模型证据。
+完整 API 响应（含最终回答、环境及工单）：[Case A](data/demo-repairable.json)。对应记录已追加至 `data/trajectories.jsonl`。
 
 ## 9. Case B 实际 trajectory
 
-同次实际 HTTP 调用因 API 密钥未配置，验收 **未通过**：
+2026-09-10，使用本地配置的 `deepseek-flash`，通过运行中的 FastAPI 实际调用。通过：重启被权限拒绝后，模型选择创建工单，没有重复重启。最终 `COMPLETED / success=false`；SSH 仍未恢复，工单只是升级处理。
+
+Task ID：`283ef3d2-4e7e-4ef3-9f91-39383f1fe3f0`。以下为实际执行记录，不是预设路径：
 
 ```json
-{"task_id":"7d36999d-c42d-4572-8a64-caee5fecef28","status":"FAILED","success":false,"trajectory":[]}
+[
+  {
+    "step": 1,
+    "tool": "check_port",
+    "arguments": {
+      "host": "dev-server",
+      "port": 22
+    },
+    "observation": {
+      "host": "dev-server",
+      "port": 22,
+      "status": "closed"
+    }
+  },
+  {
+    "step": 2,
+    "tool": "check_service",
+    "arguments": {
+      "host": "dev-server",
+      "service": "sshd"
+    },
+    "observation": {
+      "host": "dev-server",
+      "service": "sshd",
+      "status": "stopped"
+    }
+  },
+  {
+    "step": 3,
+    "tool": "restart_service",
+    "arguments": {
+      "host": "dev-server",
+      "service": "sshd"
+    },
+    "observation": {
+      "status": "failed",
+      "error": "permission denied"
+    }
+  },
+  {
+    "step": 4,
+    "tool": "create_ticket",
+    "arguments": {
+      "title": "dev-server sshd 停止，需人工恢复 SSH 服务",
+      "description": "问题：dev-server SSH 无法连接。\n已诊断事实：\n- check_port dev-server:22 => closed（SSH 端口未监听）\n- check_service dev-server sshd => stopped（sshd 服务已停止）\n已尝试操作：\n- restart_service dev-server sshd => failed: permission denied（当前自动化权限不足，无法重启服务）\n剩余工作（需具备 sudo/管理权限的人工处理）：\n1. 登录 dev-server（可通过带外控制台 / 带内管理口 / 云厂商 VNC）确认主机存活与负载。\n2. 以 root 或 sudo 执行 systemctl restart sshd（或 service sshd restart），并检查 sshd 配置（sshd -t）与日志（journalctl -u sshd / /var/log/secure）确认停止原因。\n3. 确认恢复：ssh 22 端口恢复监听，本地与远端均可成功建立 SSH 会话。\n4. 排查根因（是否被误停用、OOM、磁盘满、配置变更），防止再次发生。\n注意：本工单不代表服务已恢复，SSH 恢复需以第 3 步验证结果为准。"
+    },
+    "observation": {
+      "status": "created",
+      "ticket_id": "INC-a23a9a268eb7"
+    }
+  }
+]
 ```
 
-未发生工具调用，尚不能证明真实模型完成 `permission denied → create_ticket`。
+完整 API 响应（含最终回答、环境及工单）：[Case B](data/demo-permission_denied.json)。对应记录已追加至 `data/trajectories.jsonl`。
 
 ## 10. 测试命令
 

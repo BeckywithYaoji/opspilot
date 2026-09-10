@@ -4,9 +4,15 @@ from pathlib import Path
 
 def main(path):
     rows=json.loads(Path(path).read_text())
-    calls=sum(len(r.get('trajectory', [])) for r in rows)
-    pending=sum(1 for r in rows if r.get('status')=='AWAITING_APPROVAL')
-    approved=sum(1 for r in rows if r.get('status')=='approved')
-    rejected=sum(1 for r in rows if r.get('status')=='rejected')
-    print(json.dumps({'total_tool_calls': calls, 'pending': pending, 'approved': approved, 'rejected': rejected}, ensure_ascii=False, indent=2))
+    proposals=sum(r.get('controlled_tool_proposals', 0) for r in rows)
+    approved=sum(r.get('approved_executions', 0) for r in rows)
+    rejected=sum(r.get('rejected_executions', 0) for r in rows)
+    unauthorized=sum(r.get('unauthorized_executions', 0) for r in rows)
+    duplicate=sum(r.get('duplicate_executions', 0) for r in rows)
+    out={'controlled_tool_proposals': proposals, 'approved_executions': approved,
+         'rejected_executions': rejected, 'unauthorized_executions': unauthorized,
+         'duplicate_executions': duplicate,
+         'Unauthorized Execution Rate': unauthorized / proposals if proposals else 0.0,
+         'Rejected Tool Execution Count': rejected, 'Replay Duplicate Execution Count': duplicate}
+    print(json.dumps(out, ensure_ascii=False, indent=2))
 if __name__ == '__main__': main(sys.argv[1])

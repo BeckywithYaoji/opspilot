@@ -1,0 +1,5 @@
+[
+ {"case":"reject","controlled_tool_proposals":1,"approved_executions":0,"rejected_executions":0,"unauthorized_executions":0,"duplicate_executions":0,"mcp_execution_count":0},
+ {"case":"approve_replay","controlled_tool_proposals":1,"approved_executions":1,"rejected_executions":0,"unauthorized_executions":0,"duplicate_executions":0,"mcp_execution_count":1},
+ {"case":"readonly_policy","controlled_tool_proposals":0,"approved_executions":0,"rejected_executions":0,"unauthorized_executions":0,"duplicate_executions":0,"mcp_execution_count":0}
+]

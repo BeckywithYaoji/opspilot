@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from qdrant_client import QdrantClient
+from app.storage import qdrant_client
 from qdrant_client.models import Distance, PointStruct, VectorParams
 
 
@@ -58,7 +59,7 @@ class RunbookIndex:
         self.path, self.encoder = str(path), encoder or BGEEncoder()
     def build(self, paths):
         chunks = [chunk for path in paths for chunk in chunk_markdown(path)]
-        client = QdrantClient(path=self.path)
+        client = qdrant_client(self.path)
         if client.collection_exists(self.collection): client.delete_collection(self.collection)
         client.create_collection(self.collection, vectors_config=VectorParams(size=self.encoder.dimension, distance=Distance.COSINE))
         vectors = self.encoder.encode([c.content for c in chunks])

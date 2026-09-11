@@ -1,5 +1,6 @@
 """Thin official-SDK client. No operations implementation or fallback lives here."""
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from jsonschema import ValidationError, validate
 from mcp import Client, StdioServerParameters
 from mcp.types import TextContent
 from pydantic import BaseModel
+from app.storage import qdrant_url
 
 
 class MCPUnavailable(RuntimeError):
@@ -36,6 +38,8 @@ class OpsMCPClient:
             command=command or sys.executable,
             args=args,
             cwd=str(Path(__file__).resolve().parents[2]),
+            env={**({'QDRANT_URL': qdrant_url()} if qdrant_url() else {}),
+                 **{key: os.environ[key] for key in ('HF_HOME', 'HF_HUB_OFFLINE') if key in os.environ}},
         )
         self.client = Client(parameters, read_timeout_seconds=5)
         self.tools: list[dict] | None = None

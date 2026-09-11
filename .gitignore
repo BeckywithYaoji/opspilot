@@ -7,3 +7,8 @@ data/*.jsonl
 data/qdrant/
 data/qdrant-incidents/
 .superpowers/
+.cache/
+*.rdb
+*.aof
+*.log
+data/traces/*.jsonl

@@ -1,0 +1,15 @@
+{
+  "health": {
+    "status": "ok"
+  },
+  "readiness": {
+    "status": "healthy",
+    "redis": "healthy",
+    "qdrant": "healthy"
+  },
+  "status": "COMPLETED",
+  "trace_id": "trace-4266dc6f-1149-44f8-a914-b8fed17d143c",
+  "tools": [
+    "check_port"
+  ]
+}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
 from qdrant_client import QdrantClient
+from app.storage import qdrant_client
 from .indexer import BGEEncoder, RunbookIndex
 
 class RunbookRetriever:
@@ -9,7 +10,7 @@ class RunbookRetriever:
     def search(self, query: str, top_k: int = 4) -> dict:
         if not query or not query.strip(): return {"status": "ok", "query": query, "results": []}
         try:
-            client = QdrantClient(path=self.path)
+            client = qdrant_client(self.path)
             if not client.collection_exists(RunbookIndex.collection): raise RuntimeError("runbook collection is unavailable")
             vector = self.encoder.encode([query])[0]
             if hasattr(client, "query_points"):

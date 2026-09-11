@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, VectorParams, Filter, FieldCondition, MatchValue
 from app.rag.indexer import BGEEncoder
+from app.storage import qdrant_client
 
 class IncidentRecord(BaseModel):
     incident_id: str
@@ -49,7 +50,7 @@ class IncidentExtractor:
 class IncidentMemoryStore:
     collection='opspilot_incidents'
     def __init__(self, path: str | Path, encoder=None): self.path=str(path); self.encoder=encoder or BGEEncoder()
-    def _client(self): return QdrantClient(path=self.path)
+    def _client(self): return qdrant_client(self.path)
     def save(self, record: IncidentRecord) -> bool:
         client=self._client()
         if client.collection_exists(self.collection):

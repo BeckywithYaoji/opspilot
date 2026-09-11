@@ -13,7 +13,7 @@ from app.trajectory import DEFAULT_PATH
 from app.observability import LocalTracer
 
 
-app = FastAPI(title='OpsPilot V1 MCP', docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title='OpsPilot', version='1.0.0', docs_url=None, redoc_url=None, openapi_url=None)
 
 
 def get_model() -> CompatibleChatModel:
@@ -41,6 +41,14 @@ def get_approval_store():
 @app.get('/health')
 def health() -> dict:
     return {'status': 'ok'}
+
+
+@app.get('/ready')
+def ready():
+    from fastapi.responses import JSONResponse
+    from app.readiness import dependency_status
+    result = dependency_status()
+    return JSONResponse(result, status_code=200 if result['status'] == 'healthy' else 503)
 
 
 @app.post('/api/agent/run', response_model=RunResponse)

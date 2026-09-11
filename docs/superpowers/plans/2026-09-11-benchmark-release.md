@@ -11,4 +11,4 @@
 - [x] Run deterministic HTTP safety cases with execution spies, including approve/reject/replay/expired/unknown and memory isolation. Record failures honestly; do not fix production behavior in V6.
 - [x] Run all real cases once; aggregate clean artifacts, inspect failure classifications and run full pytest. Commit V6.
 - [x] Package Docker/Compose, configuration, health/readiness, index/smoke/demo/release scripts and final docs. Preserve real architecture limitations.
-- [ ] Verify release, secret hygiene and documentation metric consistency; commit V7 and tag only when release acceptance permits.
+- [x] Verify release, secret hygiene and documentation metric consistency; commit V7 and tag only when release acceptance permits.

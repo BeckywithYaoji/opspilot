@@ -1,0 +1,16 @@
+.git
+.env
+.env.*
+!.env.example
+.venv
+**/__pycache__
+.pytest_cache
+.superpowers
+.codex
+*.log
+data/qdrant*
+data/traces
+data/benchmark
+data/demo*
+docs
+tests

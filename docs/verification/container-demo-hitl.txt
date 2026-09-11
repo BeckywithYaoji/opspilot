@@ -1,0 +1,12 @@
+
+USER: 请重启 dev-server 的 sshd。
+AGENT TOOL: check_service {"host": "dev-server", "service": "sshd"}
+OBSERVATION: {"host": "dev-server", "service": "sshd", "status": "stopped"}
+AGENT TOOL: restart_service {"host": "dev-server", "service": "sshd"}
+OBSERVATION: {"status": "pending_approval", "approval_id": "a988bd81-93ef-4834-b815-9545b61c4c43"}
+GUARDRAIL: REQUIRE_APPROVAL
+FINAL: Waiting for human approval.
+TRACE ID: trace-9051f8b0-05ef-4b4b-9025-83a363ae7aa4
+APPROVAL: APPROVE
+FINAL: {'status': 'success', 'message': 'sshd restarted successfully'}
+TRACE ID: trace-9051f8b0-05ef-4b4b-9025-83a363ae7aa4
